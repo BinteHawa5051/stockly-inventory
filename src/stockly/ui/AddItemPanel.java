@@ -71,12 +71,14 @@ public class AddItemPanel extends JPanel {
         JPanel column = new JPanel();
         column.setOpaque(false);
         column.setLayout(new javax.swing.BoxLayout(column, javax.swing.BoxLayout.Y_AXIS));
-        column.setPreferredSize(new Dimension(560, 0));
-        column.setMaximumSize(new Dimension(560, Integer.MAX_VALUE));
 
         column.add(buildHeader());
         column.add(javax.swing.Box.createVerticalStrut(18));
         column.add(buildForm());
+
+        // fixed readable width, natural height
+        column.setPreferredSize(new Dimension(560, column.getPreferredSize().height));
+        column.setMaximumSize(new Dimension(560, Integer.MAX_VALUE));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
