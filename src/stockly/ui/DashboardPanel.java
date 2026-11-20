@@ -438,56 +438,49 @@ public class DashboardPanel extends JPanel {
         }
     }
 
-    /** One restock-alert row: name | "n left" | badge | Update — all 28px. */
+    /** One restock-alert row: name | "n left" | badge | Update — vertically centred. */
     private static class AlertRow extends JPanel {
         AlertRow(Product p, java.util.function.Consumer<String> onEdit) {
             setOpaque(false);
             setLayout(new BorderLayout());
-            setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 4, 2, 4));
-            setMaximumSize(new Dimension(Integer.MAX_VALUE, 34));
+            setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 4, 3, 4));
+            setMaximumSize(new Dimension(Integer.MAX_VALUE, 38));
             setAlignmentX(LEFT_ALIGNMENT);
+
+            // single horizontal line, everything vertically centred
+            JPanel line = new JPanel();
+            line.setOpaque(false);
+            line.setLayout(new BoxLayout(line, BoxLayout.X_AXIS));
 
             JLabel name = new JLabel(p.getName());
             name.setFont(Theme.font(12));
             name.setForeground(Theme.TEXT);
-
-            JPanel left = new JPanel(new BorderLayout());
-            left.setOpaque(false);
-            left.add(name, BorderLayout.CENTER);
-            left.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 8));
+            name.setAlignmentY(java.awt.Component.CENTER_ALIGNMENT);
 
             JLabel qty = new JLabel(p.getQuantity() + " left");
             qty.setFont(Theme.font(11));
             qty.setForeground(Theme.TEXT_MUTED);
-            qty.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-            qty.setPreferredSize(new Dimension(56, 0));
+            qty.setAlignmentY(java.awt.Component.CENTER_ALIGNMENT);
+            qty.setPreferredSize(new Dimension(52, 0));
 
             UIComponents.StatusBadge badge = new UIComponents.StatusBadge(p.getStockStatus());
+            badge.setAlignmentY(java.awt.Component.CENTER_ALIGNMENT);
 
             UIComponents.GhostButton update = new UIComponents.GhostButton("Update");
             update.setFont(Theme.font(11));
             update.setPreferredSize(new Dimension(update.getPreferredSize().width, 28));
+            update.setAlignmentY(java.awt.Component.CENTER_ALIGNMENT);
             update.addActionListener(e -> onEdit.accept(p.getId()));
 
-            JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
-            right.setOpaque(false);
-            right.add(badge);
-            right.add(update);
-
-            add(left, BorderLayout.CENTER);
-            add(qty, BorderLayout.EAST);
-            // overlay: put qty inside left area instead — simpler: combine
-            remove(qty);
-            JPanel mid = new JPanel(new BorderLayout());
-            mid.setOpaque(false);
-            mid.add(left, BorderLayout.CENTER);
-            mid.add(qty, BorderLayout.EAST);
-            remove(mid);
-            JPanel wrapper = new JPanel(new BorderLayout());
-            wrapper.setOpaque(false);
-            wrapper.add(mid, BorderLayout.CENTER);
-            wrapper.add(right, BorderLayout.EAST);
-            add(wrapper, BorderLayout.CENTER);
+            line.add(name);
+            line.add(Box.createHorizontalGlue());
+            line.add(Box.createHorizontalStrut(10));
+            line.add(qty);
+            line.add(Box.createHorizontalStrut(10));
+            line.add(badge);
+            line.add(Box.createHorizontalStrut(8));
+            line.add(update);
+            add(line, BorderLayout.CENTER);
         }
     }
 
