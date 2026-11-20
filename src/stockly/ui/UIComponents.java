@@ -79,7 +79,6 @@ public final class UIComponents {
             setContentAreaFilled(false);
             setOpaque(false);
             setCursor(new Cursor(Cursor.HAND_CURSOR));
-            setPreferredSize(new Dimension(0, 36));
             setMargin(new Insets(0, 0, 0, 0));
 
             MouseAdapter hover = new MouseAdapter() {
@@ -87,6 +86,12 @@ public final class UIComponents {
                 @Override public void mouseExited(MouseEvent e) { setBackground(bg); repaint(); }
             };
             addMouseListener(hover);
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension d = super.getPreferredSize();
+            return new Dimension(d.width + 28, 38);
         }
 
         @Override
@@ -115,13 +120,18 @@ public final class UIComponents {
             setContentAreaFilled(false);
             setOpaque(false);
             setCursor(new Cursor(Cursor.HAND_CURSOR));
-            setPreferredSize(new Dimension(0, 36));
             setMargin(new Insets(0, 0, 0, 0));
 
             addMouseListener(new MouseAdapter() {
                 @Override public void mouseEntered(MouseEvent e) { setBackground(Theme.HOVER); repaint(); }
                 @Override public void mouseExited(MouseEvent e) { setBackground(Theme.SURFACE_ALT); repaint(); }
             });
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension d = super.getPreferredSize();
+            return new Dimension(d.width + 24, 38);
         }
 
         @Override
