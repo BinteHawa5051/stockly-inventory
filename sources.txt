@@ -7,6 +7,7 @@ src/stockly/model/Product.java
 src/stockly/model/StockStatus.java
 src/stockly/test/Screenshot.java
 src/stockly/test/SelfTest.java
+src/stockly/test/UITest.java
 src/stockly/ui/AddItemPanel.java
 src/stockly/ui/AnalyticsPanel.java
 src/stockly/ui/charts/DonutChart.java
