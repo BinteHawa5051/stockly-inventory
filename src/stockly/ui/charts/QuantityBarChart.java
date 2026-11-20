@@ -131,9 +131,13 @@ public class QuantityBarChart extends JPanel {
             g2.setColor(Theme.TEXT);
             g2.drawString(name, 4, y + rowH / 2 + 4);
 
-            // bar
+            // bar coloured by stock status — agrees with the rest of the UI
             int fill = (int) Math.round((p.getQuantity() / (double) maxQuantity) * barW);
-            Color barColor = Theme.CHART_SERIES[i % Theme.CHART_SERIES.length];
+            Color barColor = switch (p.getStockStatus()) {
+                case IN_STOCK -> Theme.CHART_IN_STOCK;
+                case LOW_STOCK -> Theme.CHART_LOW_STOCK;
+                case OUT_OF_STOCK -> Theme.CHART_OUT_STOCK;
+            };
             g2.setColor(Theme.SURFACE_ALT);
             g2.fill(new RoundRectangle2D.Float(barX, y + 6, barW, rowH - 13, 5, 5));
             if (fill > 0) {
@@ -141,10 +145,11 @@ public class QuantityBarChart extends JPanel {
                 g2.fill(new RoundRectangle2D.Float(barX, y + 6, Math.max(6, fill), rowH - 13, 5, 5));
             }
 
-            // quantity value at bar end
+            // quantity value right-aligned in a fixed column
             g2.setColor(Theme.TEXT_MUTED);
             String qty = String.valueOf(p.getQuantity());
-            g2.drawString(qty, barX + barW + 8, y + rowH / 2 + 4);
+            g2.drawString(qty, barX + barW + valueW - fm.stringWidth(qty) - 4,
+                    y + rowH / 2 + 4);
 
             // row separator
             g2.setColor(Theme.BORDER);

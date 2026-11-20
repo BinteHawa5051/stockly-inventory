@@ -19,6 +19,7 @@ src/stockly/ui/MainFrame.java
 src/stockly/ui/ProductDetailsDialog.java
 src/stockly/ui/ProductDialog.java
 src/stockly/ui/PromptField.java
+src/stockly/ui/ScrollBarKit.java
 src/stockly/ui/SettingsPanel.java
 src/stockly/ui/Sidebar.java
 src/stockly/ui/TableKit.java

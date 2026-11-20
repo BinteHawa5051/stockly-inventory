@@ -242,14 +242,14 @@ public final class UIComponents {
             setBorder(BorderFactory.createEmptyBorder(0, 0, 6, 0));
 
             JLabel t = new JLabel(title);
-            t.setFont(Theme.bold(15));
+            t.setFont(Theme.bold(16));
             t.setForeground(Theme.TEXT);
             t.setAlignmentX(LEFT_ALIGNMENT);
             add(t);
 
             if (subtitle != null && !subtitle.isEmpty()) {
                 JLabel s = new JLabel(subtitle);
-                s.setFont(Theme.font(11));
+                s.setFont(Theme.font(12));
                 s.setForeground(Theme.TEXT_MUTED);
                 s.setAlignmentX(LEFT_ALIGNMENT);
                 add(s);

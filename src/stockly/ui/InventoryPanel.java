@@ -76,7 +76,7 @@ public class InventoryPanel extends JPanel {
     private final JLabel[] statValues = new JLabel[4];
     private final TableKit.SearchBox searchBox = new TableKit.SearchBox("Search products...");
     private final JComboBox<String> statusFilter = new JComboBox<>(
-            new String[]{"All Statuses", "In Stock", "Low Stock", "Out of Stock"});
+            new String[]{"All Statuses", "Needs Attention", "In Stock", "Low Stock", "Out of Stock"});
     private final JComboBox<String> sortBox = new JComboBox<>(
             new String[]{"Sort: Name A–Z", "Sort: Name Z–A", "Sort: Qty High→Low", "Sort: Qty Low→High"});
     private final UIComponents.GhostButton clearBtn =
@@ -479,6 +479,12 @@ public class InventoryPanel extends JPanel {
         searchBox.getField().setText(text == null ? "" : text);
     }
 
+    /** Filters the table to low + out-of-stock products (dashboard "View all"). */
+    public void filterAttention() {
+        statusFilter.setSelectedIndex(1);
+        refresh();
+    }
+
     /** Rebuilds the table from current filters and inventory data. */
     public void refresh() {
         String local = searchBox.getField().getText().trim().toLowerCase();
@@ -488,8 +494,14 @@ public class InventoryPanel extends JPanel {
         List<Product> filtered = new ArrayList<>();
         for (Product p : manager.getAllProducts()) {
             boolean nameMatch = local.isEmpty() || p.getName().toLowerCase().contains(local);
-            boolean statusMatch = "All Statuses".equals(status)
-                    || p.getStockStatus().getLabel().equals(status);
+            boolean statusMatch;
+            if ("Needs Attention".equals(status)) {
+                statusMatch = p.getStockStatus() == StockStatus.LOW_STOCK
+                        || p.getStockStatus() == StockStatus.OUT_OF_STOCK;
+            } else {
+                statusMatch = "All Statuses".equals(status)
+                        || p.getStockStatus().getLabel().equals(status);
+            }
             if (nameMatch && statusMatch) {
                 filtered.add(p);
             }

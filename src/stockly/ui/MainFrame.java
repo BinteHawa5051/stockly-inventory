@@ -69,13 +69,14 @@ public class MainFrame extends JFrame {
         java.util.function.Consumer<String> openEditor =
                 id -> ProductDialog.show(this, manager, id);
 
-        dashboard = new DashboardPanel(manager, openEditor);
         inventory = new InventoryPanel(manager, new InventoryPanel.ProductActions() {
             @Override public void onAdd() { ProductDialog.show(MainFrame.this, manager, null); }
             @Override public void onEdit(String id) { ProductDialog.show(MainFrame.this, manager, id); }
             @Override public void onView(String id) { ProductDetailsDialog.show(MainFrame.this, manager, id); }
             @Override public void onDelete(String id) { confirmDelete(id); }
         });
+        dashboard = new DashboardPanel(manager, openEditor,
+                () -> { inventory.filterAttention(); navigateById(Sidebar.INVENTORY); });
         analytics = new AnalyticsPanel(manager);
         settings = new SettingsPanel(manager, this::exportInventory,
                 this::importInventory, this::clearInventory);
