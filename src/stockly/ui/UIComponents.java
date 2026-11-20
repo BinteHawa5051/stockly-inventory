@@ -1,0 +1,284 @@
+package stockly.ui;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Insets;
+import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.RoundRectangle2D;
+
+/**
+ * Reusable styled Swing components shared across the application.
+ * <p>
+ * These components replace default-looking Swing widgets with the
+ * Stockly visual language: rounded cards, flat forest buttons, soft
+ * hover states and pill-shaped status badges.
+ *
+ * @author Stockly Team
+ * @version 1.0
+ */
+public final class UIComponents {
+
+    private UIComponents() {
+        // utility class
+    }
+
+    /**
+     * Rounded surface panel used as the base for cards and sections.
+     */
+    public static class Card extends JPanel {
+        public Card() {
+            setOpaque(false);
+            setLayout(new java.awt.BorderLayout());
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(Theme.SURFACE);
+            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), Theme.RADIUS, Theme.RADIUS));
+            g2.setColor(Theme.BORDER);
+            g2.draw(new RoundRectangle2D.Float(0.5f, 0.5f, getWidth() - 1, getHeight() - 1,
+                    Theme.RADIUS, Theme.RADIUS));
+            g2.dispose();
+            super.paintComponent(g);
+        }
+    }
+
+    /**
+     * Forest-green primary action button with a subtle hover state.
+     */
+    public static class PrimaryButton extends JButton {
+        public PrimaryButton(String text) {
+            super(text);
+            style(Theme.FOREST, Theme.SURFACE);
+        }
+
+        public PrimaryButton(String text, Color bg) {
+            super(text);
+            style(bg, Theme.SURFACE);
+        }
+
+        private void style(Color bg, Color fg) {
+            setFont(Theme.font(13));
+            setForeground(fg);
+            setBackground(bg);
+            setFocusPainted(false);
+            setBorderPainted(false);
+            setContentAreaFilled(false);
+            setOpaque(false);
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+            setPreferredSize(new Dimension(0, 36));
+            setMargin(new Insets(0, 0, 0, 0));
+
+            MouseAdapter hover = new MouseAdapter() {
+                @Override public void mouseEntered(MouseEvent e) { setBackground(bg.darker()); repaint(); }
+                @Override public void mouseExited(MouseEvent e) { setBackground(bg); repaint(); }
+            };
+            addMouseListener(hover);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            Color bg = getModel().isPressed() ? getBackground().darker().darker() : getBackground();
+            g2.setColor(bg);
+            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), Theme.RADIUS, Theme.RADIUS));
+            g2.dispose();
+            super.paintComponent(g);
+        }
+    }
+
+    /**
+     * Quiet secondary button with a soft grey fill.
+     */
+    public static class GhostButton extends JButton {
+        public GhostButton(String text) {
+            super(text);
+            setFont(Theme.font(13));
+            setForeground(Theme.TEXT);
+            setBackground(Theme.SURFACE_ALT);
+            setFocusPainted(false);
+            setBorderPainted(false);
+            setContentAreaFilled(false);
+            setOpaque(false);
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+            setPreferredSize(new Dimension(0, 36));
+            setMargin(new Insets(0, 0, 0, 0));
+
+            addMouseListener(new MouseAdapter() {
+                @Override public void mouseEntered(MouseEvent e) { setBackground(Theme.HOVER); repaint(); }
+                @Override public void mouseExited(MouseEvent e) { setBackground(Theme.SURFACE_ALT); repaint(); }
+            });
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(getBackground());
+            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), Theme.RADIUS, Theme.RADIUS));
+            g2.dispose();
+            super.paintComponent(g);
+        }
+    }
+
+    /**
+     * Small square icon button used for row actions (edit, delete).
+     */
+    public static class IconButton extends JButton {
+        private final String iconName;
+        private Color iconColor = Theme.TEXT_MUTED;
+
+        public IconButton(String iconName) {
+            super();
+            this.iconName = iconName;
+            setPreferredSize(new Dimension(30, 30));
+            setMaximumSize(new Dimension(30, 30));
+            setFocusPainted(false);
+            setContentAreaFilled(false);
+            setBorderPainted(false);
+            setOpaque(false);
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
+            addMouseListener(new MouseAdapter() {
+                @Override public void mouseEntered(MouseEvent e) { repaint(); }
+                @Override public void mouseExited(MouseEvent e) { repaint(); }
+            });
+        }
+
+        public void setIconColor(Color color) {
+            this.iconColor = color;
+            repaint();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            if (getModel().isRollover()) {
+                g2.setColor(Theme.HOVER);
+                g2.fill(new RoundRectangle2D.Float(2, 2, getWidth() - 4, getHeight() - 4, 7, 7));
+            }
+            Icon.draw(g2, iconName, 5, 5, getWidth() - 10, iconColor);
+            g2.dispose();
+            super.paintComponent(g);
+        }
+    }
+
+    /**
+     * Pill-shaped status badge showing the stock status.
+     */
+    public static class StatusBadge extends JPanel {
+        private final JLabel label = new JLabel();
+
+        public StatusBadge(stockly.model.StockStatus status) {
+            setOpaque(false);
+            setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+            setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 10));
+            setPreferredSize(new Dimension(0, 24));
+            label.setFont(Theme.font(11));
+            label.setForeground(status.getColor());
+            add(label);
+            update(status.getLabel(), status.getColor());
+        }
+
+        /** Refreshes the badge text and color. */
+        public void update(String text, Color color) {
+            label.setText(text);
+            label.setForeground(color);
+        }
+
+        /** @return preferred width that fits the text plus padding */
+        @Override
+        public Dimension getPreferredSize() {
+            Dimension d = label.getPreferredSize();
+            return new Dimension(d.width + 22, 24);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            Color c = label.getForeground();
+            g2.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 22));
+            g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), getHeight() / 2f, getHeight() / 2f));
+            g2.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 90));
+            g2.draw(new RoundRectangle2D.Float(0.5f, 0.5f, getWidth() - 1, getHeight() - 1,
+                    getHeight() / 2f, getHeight() / 2f));
+            g2.dispose();
+            super.paintComponent(g);
+        }
+    }
+
+    /**
+     * Section heading with optional muted subtitle.
+     */
+    public static class SectionTitle extends JPanel {
+        public SectionTitle(String title, String subtitle) {
+            setOpaque(false);
+            setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
+            setBorder(BorderFactory.createEmptyBorder(0, 0, 6, 0));
+
+            JLabel t = new JLabel(title);
+            t.setFont(Theme.bold(15));
+            t.setForeground(Theme.TEXT);
+            t.setAlignmentX(LEFT_ALIGNMENT);
+            add(t);
+
+            if (subtitle != null && !subtitle.isEmpty()) {
+                JLabel s = new JLabel(subtitle);
+                s.setFont(Theme.font(11));
+                s.setForeground(Theme.TEXT_MUTED);
+                s.setAlignmentX(LEFT_ALIGNMENT);
+                add(s);
+            }
+        }
+    }
+
+    /**
+     * Muted helper text label.
+     */
+    public static class Caption extends JLabel {
+        public Caption(String text) {
+            super(text);
+            setFont(Theme.font(11));
+            setForeground(Theme.TEXT_MUTED);
+        }
+    }
+
+    /** Centers a component horizontally inside its parent width. */
+    public static JPanel centered(JLabel... labels) {
+        JPanel p = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 8, 0));
+        p.setOpaque(false);
+        for (JLabel l : labels) {
+            p.add(l);
+        }
+        return p;
+    }
+
+    /** Computes a nice "1.2k" style compact number for big stat values. */
+    public static String compact(long value) {
+        if (value < 1000) {
+            return String.valueOf(value);
+        }
+        return String.format("%.1fk", value / 1000.0).replace(".0k", "k");
+    }
+
+    /** Utility: text width in pixels for the UI font. */
+    public static int textWidth(String text, java.awt.Font font) {
+        java.awt.FontMetrics fm = new java.awt.Canvas().getFontMetrics(font);
+        return fm.stringWidth(text);
+    }
+}
