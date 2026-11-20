@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -278,6 +279,85 @@ public class InventoryManager {
                 "Deleted \"" + product.getName() + "\"");
         save();
         notifyChanged();
+    }
+
+    /**
+     * Exports all products to a CSV file (same format as persistence).
+     *
+     * @param target destination file
+     * @throws IOException when the file cannot be written
+     */
+    public void exportCsv(Path target) throws IOException {
+        try (BufferedWriter writer = Files.newBufferedWriter(target, StandardCharsets.UTF_8)) {
+            writer.write("id,name,quantity,status");
+            writer.newLine();
+            for (Product p : products) {
+                String status = p.getManualStatus() == null ? "" : p.getManualStatus().name();
+                writer.write(String.join(",", p.getId(), escape(p.getName()),
+                        String.valueOf(p.getQuantity()), status));
+                writer.newLine();
+            }
+        }
+    }
+
+    /**
+     * Replaces the whole inventory with the contents of a CSV file.
+     * Rows with invalid data are skipped; the result is saved and all
+     * listeners are notified.
+     *
+     * @param source CSV file to import
+     * @return number of products successfully imported
+     * @throws IOException when the file cannot be read
+     */
+    public int importCsv(Path source) throws IOException {
+        List<Product> imported = new ArrayList<>();
+        try (BufferedReader reader = Files.newBufferedReader(source, StandardCharsets.UTF_8)) {
+            String line = reader.readLine(); // header
+            while ((line = reader.readLine()) != null) {
+                if (line.isBlank()) {
+                    continue;
+                }
+                try {
+                    String[] parts = parseCsvLine(line);
+                    if (parts.length >= 3) {
+                        Product p = new Product(parts[0], parts[1],
+                                Integer.parseInt(parts[2].trim()));
+                        if (parts.length >= 4 && !parts[3].isBlank()) {
+                            try {
+                                p.setManualStatus(StockStatus.valueOf(parts[3].trim()));
+                            } catch (IllegalArgumentException ignored) { }
+                        }
+                        imported.add(p);
+                    }
+                } catch (IllegalArgumentException e) {
+                    // skip malformed row
+                }
+            }
+        }
+        products.clear();
+        products.addAll(imported);
+        activityLog.record(ActivityEntry.Kind.UPDATED,
+                "Imported " + imported.size() + " products from CSV");
+        save();
+        notifyChanged();
+        return imported.size();
+    }
+
+    /** Removes every product after recording the action. */
+    public void clearAll() {
+        int count = products.size();
+        products.clear();
+        activityLog.record(ActivityEntry.Kind.DELETED,
+                "Cleared entire inventory (" + count + " products)");
+        save();
+        notifyChanged();
+    }
+
+    /** @return products sorted by quantity ascending (lowest stock first) */
+    public List<Product> getProductsNeedingAttention() {
+        List<Product> list = new ArrayList<>(products);
+        list.sort(Comparator.comparingInt(Product::getQuantity));
+        return list;
     }
 
     /** Generates the next sequential id, e.g. {@code P007}. */

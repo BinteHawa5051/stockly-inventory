@@ -1,6 +1,7 @@
 src/stockly/Main.java
 src/stockly/model/ActivityEntry.java
 src/stockly/model/ActivityLog.java
+src/stockly/model/AppConfig.java
 src/stockly/model/InventoryManager.java
 src/stockly/model/Product.java
 src/stockly/model/StockStatus.java
@@ -11,12 +12,16 @@ src/stockly/ui/AnalyticsPanel.java
 src/stockly/ui/charts/DonutChart.java
 src/stockly/ui/charts/QuantityBarChart.java
 src/stockly/ui/DashboardPanel.java
+src/stockly/ui/Dialogs.java
 src/stockly/ui/Icon.java
 src/stockly/ui/InventoryPanel.java
 src/stockly/ui/MainFrame.java
+src/stockly/ui/ProductDetailsDialog.java
 src/stockly/ui/ProductDialog.java
+src/stockly/ui/PromptField.java
 src/stockly/ui/SettingsPanel.java
 src/stockly/ui/Sidebar.java
+src/stockly/ui/TableKit.java
 src/stockly/ui/Theme.java
 src/stockly/ui/TopBar.java
 src/stockly/ui/UIComponents.java

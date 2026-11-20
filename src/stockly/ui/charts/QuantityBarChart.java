@@ -3,6 +3,8 @@ package stockly.ui.charts;
 import stockly.model.Product;
 import stockly.ui.Theme;
 
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -28,10 +30,51 @@ public class QuantityBarChart extends JPanel {
 
     private List<Product> products = List.of();
     private int maxQuantity = 1;
+    private final JLabel tip = new JLabel();
 
     /** Creates an empty chart; call {@link #setData(List)} to populate. */
     public QuantityBarChart() {
         setOpaque(false);
+        setLayout(null);
+        tip.setFont(Theme.font(11));
+        tip.setForeground(Theme.SURFACE);
+        tip.setBackground(new Color(0x30332F));
+        tip.setOpaque(true);
+        tip.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        tip.setVisible(false);
+        add(tip);
+        attachTooltip();
+    }
+
+    private int rowAt(int my) {
+        int rowH = 30;
+        int top = 14;
+        int idx = (my - top) / rowH;
+        return idx >= 0 && idx < products.size() ? idx : -1;
+    }
+
+    private void attachTooltip() {
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(java.awt.event.MouseEvent e) {
+                int idx = rowAt(e.getY());
+                if (idx < 0) {
+                    tip.setVisible(false);
+                    return;
+                }
+                Product p = products.get(idx);
+                tip.setText(p.getName() + " — " + p.getQuantity() + " units ("
+                        + p.getStockStatus().getLabel() + ")");
+                tip.setSize(tip.getPreferredSize());
+                int tx = Math.min(e.getX() + 14, getWidth() - tip.getWidth() - 4);
+                int ty = Math.max(4, e.getY() - tip.getHeight() - 8);
+                tip.setLocation(tx, ty);
+                tip.setVisible(true);
+            }
+        });
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override public void mouseExited(java.awt.event.MouseEvent e) { tip.setVisible(false); }
+        });
     }
 
     /**

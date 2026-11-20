@@ -181,6 +181,30 @@ public final class SelfTest {
                 "loaded " + bad.productCount() + " of 3 rows; P002 manual status="
                         + bad.findById("P002").getStockStatus());
 
+        // TC-20 configurable low-stock threshold
+        stockly.model.AppConfig.setLowStockThreshold(10);
+        Product p10 = new Product("T", "t", 8);
+        boolean thresholdWorks = p10.getStockStatus() == StockStatus.LOW_STOCK;
+        stockly.model.AppConfig.setLowStockThreshold(5);
+        check("TC-20", "Low-stock threshold is configurable",
+                thresholdWorks && new Product("T2", "t", 8).getStockStatus() == StockStatus.IN_STOCK,
+                "threshold=10 -> LOW, threshold=5 -> IN for qty 8");
+
+        // TC-21 export + import round-trip
+        Path exported = temp.resolve("export.csv");
+        m.exportCsv(exported);
+        InventoryManager imp = new InventoryManager(temp.resolve("imp.csv"));
+        int imported = imp.importCsv(exported);
+        check("TC-21", "CSV export/import round-trip",
+                imported == m.productCount(),
+                "exported+imported " + imported + " products");
+
+        // TC-22 clear inventory
+        imp.clearAll();
+        check("TC-22", "Clear inventory empties the list",
+                imp.productCount() == 0,
+                "count=" + imp.productCount());
+
         System.out.println();
         System.out.println("RESULT: " + passed + " passed, " + failed + " failed");
         System.exit(failed == 0 ? 0 : 1);

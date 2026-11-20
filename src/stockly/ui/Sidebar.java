@@ -67,14 +67,13 @@ public class Sidebar extends JPanel {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(Theme.PEACH);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+                Icon.draw(g2, Icon.LOGO, 9, 9, getWidth() - 18, Theme.FOREST);
                 g2.dispose();
                 super.paintComponent(g);
             }
         };
         mark.setPreferredSize(new Dimension(36, 36));
         mark.setOpaque(false);
-        IconHolder holder = new IconHolder(Icon.LOGO, Theme.FOREST);
-        mark.add(holder);
 
         JPanel text = new JPanel(new BorderLayout());
         text.setOpaque(false);

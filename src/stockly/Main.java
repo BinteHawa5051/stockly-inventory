@@ -38,6 +38,7 @@ public final class Main {
                 // fall back to the default Swing L&F
             }
 
+            stockly.model.AppConfig.load();
             InventoryManager manager = new InventoryManager(Paths.get("inventory.csv"));
             MainFrame frame = new MainFrame(manager);
             frame.setVisible(true);

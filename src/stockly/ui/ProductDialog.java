@@ -37,8 +37,8 @@ public class ProductDialog extends JDialog {
 
     private final InventoryManager manager;
     private final String editingId; // null → add mode
-    private final JTextField nameField = new JTextField();
-    private final JTextField qtyField = new JTextField();
+    private final PromptField nameField = new PromptField("e.g. Ceramic Mug");
+    private final PromptField qtyField = new PromptField("e.g. 12");
     private final javax.swing.JComboBox<String> statusBox = new javax.swing.JComboBox<>(
             new String[]{"Auto (from quantity)", "In Stock", "Low Stock", "Out of Stock"});
     private final JLabel statusPreview = new JLabel(" ");
@@ -283,7 +283,10 @@ public class ProductDialog extends JDialog {
                 manager.updateProduct(editingId, name, qty, selectedManualStatus());
             }
             saved = true;
+            String savedName = editingId == null ? name : manager.findById(editingId).getName();
             dispose();
+            Dialogs.notice(getOwner(), "Product Saved",
+                    "\"" + savedName + "\" has been saved to your inventory.");
         } catch (InventoryManager.InventoryException ex) {
             showError(ex.getMessage());
         }

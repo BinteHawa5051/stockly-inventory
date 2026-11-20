@@ -14,11 +14,11 @@ package stockly.model;
 public class Product {
 
     /**
-     * Quantity at or below which an item is considered low stock.
-     * Change this single constant to adjust the low-stock threshold
-     * for the whole application.
+     * Default low-stock threshold, kept for reference. The live value is
+     * {@link AppConfig#getLowStockThreshold()} and can be changed in
+     * Settings — it applies to every product immediately.
      */
-    public static final int LOW_STOCK_THRESHOLD = 5;
+    public static final int DEFAULT_LOW_STOCK_THRESHOLD = 5;
 
     private String id;
     private String name;
@@ -106,8 +106,8 @@ public class Product {
      * Derives the stock status from the current quantity.
      * <ul>
      *   <li>{@code quantity == 0} &rarr; {@link StockStatus#OUT_OF_STOCK}</li>
-     *   <li>{@code 1 <= quantity <= LOW_STOCK_THRESHOLD} &rarr; {@link StockStatus#LOW_STOCK}</li>
-     *   <li>{@code quantity > LOW_STOCK_THRESHOLD} &rarr; {@link StockStatus#IN_STOCK}</li>
+     *   <li>{@code 1 <= quantity <= AppConfig threshold} &rarr; {@link StockStatus#LOW_STOCK}</li>
+     *   <li>{@code quantity > AppConfig threshold} &rarr; {@link StockStatus#IN_STOCK}</li>
      * </ul>
      *
      * @return the stock status matching the current quantity
@@ -119,7 +119,7 @@ public class Product {
         if (quantity == 0) {
             return StockStatus.OUT_OF_STOCK;
         }
-        if (quantity <= LOW_STOCK_THRESHOLD) {
+        if (quantity <= AppConfig.getLowStockThreshold()) {
             return StockStatus.LOW_STOCK;
         }
         return StockStatus.IN_STOCK;

@@ -50,14 +50,21 @@ public class DashboardPanel extends JPanel {
     private final StatCard lowCard;
     private final StatCard outCard;
     private final OverviewCard overview = new OverviewCard();
+    private final LowStockCard alerts;
+    private final java.util.function.Consumer<String> onEditProduct;
 
     /**
      * Creates the dashboard bound to the given inventory.
      *
-     * @param manager the shared inventory data source
+     * @param manager        the shared inventory data source
+     * @param onEditProduct  callback receiving a product id when the user
+     *                       clicks "Update" on a low-stock alert
      */
-    public DashboardPanel(InventoryManager manager) {
+    public DashboardPanel(InventoryManager manager,
+                          java.util.function.Consumer<String> onEditProduct) {
         this.manager = manager;
+        this.onEditProduct = onEditProduct;
+        this.alerts = new LowStockCard(onEditProduct);
         setLayout(new BorderLayout());
         setBackground(Theme.BG);
         setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 28, 24, 28));
@@ -98,17 +105,25 @@ public class DashboardPanel extends JPanel {
         gbc.weightx = 0.38;
         content.add(overview, gbc);
 
-        // Row 3: bar chart + recent activity
+        // Row 3: bar chart + right column (alerts on top, activity below)
         gbc.gridy = 2;
         gbc.weighty = 1.4;
         gbc.gridx = 0;
-        gbc.gridwidth = 3;
-        gbc.weightx = 0.66;
+        gbc.gridwidth = 2;
+        gbc.weightx = 0.58;
         content.add(barCard(), gbc);
-        gbc.gridx = 3;
-        gbc.gridwidth = 1;
-        gbc.weightx = 0.34;
-        content.add(activityCard(), gbc);
+        gbc.gridx = 2;
+        gbc.gridwidth = 2;
+        gbc.weightx = 0.42;
+        JPanel rightCol = new JPanel();
+        rightCol.setOpaque(false);
+        rightCol.setLayout(new BoxLayout(rightCol, BoxLayout.Y_AXIS));
+        rightCol.add(alerts);
+        rightCol.add(Box.createVerticalStrut(16));
+        JPanel act = activityCard();
+        act.setAlignmentX(LEFT_ALIGNMENT);
+        rightCol.add(act);
+        content.add(rightCol, gbc);
 
         add(content, BorderLayout.CENTER);
         refresh();
@@ -177,6 +192,7 @@ public class DashboardPanel extends JPanel {
 
         bars.setData(manager.getAllProducts());
         overview.update(manager);
+        alerts.update(manager);
         rebuildActivity();
         revalidate();
         repaint();
@@ -422,6 +438,98 @@ public class DashboardPanel extends JPanel {
             center.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 0));
             center.add(text, BorderLayout.CENTER);
             add(center, BorderLayout.CENTER);
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // Low-stock alerts card
+    // ------------------------------------------------------------------
+
+    /** Card listing products that need restocking, with quick edit action. */
+    private static class LowStockCard extends UIComponents.Card {
+        private final JPanel list = new JPanel();
+        private final java.util.function.Consumer<String> onEdit;
+
+        LowStockCard(java.util.function.Consumer<String> onEdit) {
+            this.onEdit = onEdit;
+            setLayout(new BorderLayout());
+            setBorder(javax.swing.BorderFactory.createEmptyBorder(14, 16, 12, 16));
+
+            JPanel header = new JPanel(new BorderLayout());
+            header.setOpaque(false);
+            header.add(new UIComponents.SectionTitle("Needs Restock", "Low or out of stock"),
+                    BorderLayout.WEST);
+            add(header, BorderLayout.NORTH);
+
+            list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
+            list.setOpaque(false);
+            list.setBorder(javax.swing.BorderFactory.createEmptyBorder(6, 0, 0, 0));
+
+            javax.swing.JScrollPane scroll = new javax.swing.JScrollPane(list);
+            scroll.setBorder(null);
+            scroll.setOpaque(false);
+            scroll.getViewport().setOpaque(false);
+            scroll.setPreferredSize(new Dimension(0, 120));
+            add(scroll, BorderLayout.CENTER);
+        }
+
+        void update(InventoryManager m) {
+            list.removeAll();
+            List<Product> attention = m.getProductsNeedingAttention().stream()
+                    .filter(p -> p.getStockStatus() != StockStatus.IN_STOCK)
+                    .limit(5)
+                    .toList();
+            if (attention.isEmpty()) {
+                JLabel ok = new JLabel("All products are well stocked.");
+                ok.setFont(Theme.font(12));
+                ok.setForeground(Theme.CHART_IN_STOCK);
+                ok.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 4, 8, 4));
+                list.add(ok);
+            } else {
+                for (Product p : attention) {
+                    list.add(new AlertRow(p, onEdit));
+                }
+            }
+            list.revalidate();
+            list.repaint();
+        }
+    }
+
+    /** One restock-alert row: name, qty, status badge, Update button. */
+    private static class AlertRow extends JPanel {
+        AlertRow(Product p, java.util.function.Consumer<String> onEdit) {
+            setOpaque(false);
+            setLayout(new BorderLayout());
+            setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
+            setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+            setAlignmentX(LEFT_ALIGNMENT);
+
+            JLabel name = new JLabel(p.getName());
+            name.setFont(Theme.font(12));
+            name.setForeground(Theme.TEXT);
+            JPanel left = new JPanel(new BorderLayout());
+            left.setOpaque(false);
+            left.add(name, BorderLayout.CENTER);
+            JLabel qty = new JLabel(p.getQuantity() + " left");
+            qty.setFont(Theme.font(11));
+            qty.setForeground(Theme.TEXT_MUTED);
+            left.add(qty, BorderLayout.EAST);
+            left.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 8));
+
+            UIComponents.StatusBadge badge =
+                    new UIComponents.StatusBadge(p.getStockStatus());
+
+            UIComponents.GhostButton update = new UIComponents.GhostButton("Update");
+            update.setFont(Theme.font(11));
+            update.addActionListener(e -> onEdit.accept(p.getId()));
+
+            JPanel right = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 8, 0));
+            right.setOpaque(false);
+            right.add(badge);
+            right.add(update);
+
+            add(left, BorderLayout.CENTER);
+            add(right, BorderLayout.EAST);
         }
     }
 }

@@ -44,8 +44,8 @@ public class AddItemPanel extends JPanel {
     private final Runnable onSavedToInventory;
     private final Runnable onSavedToDashboard;
 
-    private final JTextField nameField = new JTextField();
-    private final JTextField qtyField = new JTextField();
+    private final PromptField nameField = new PromptField("e.g. Ceramic Mug");
+    private final PromptField qtyField = new PromptField("e.g. 12");
     private final JComboBox<String> statusBox = new JComboBox<>(STATUS_OPTIONS);
     private final JLabel statusPreview = new JLabel(" ");
     private final JLabel errorLabel = new JLabel(" ");
@@ -211,11 +211,14 @@ public class AddItemPanel extends JPanel {
         buttons.setBorder(BorderFactory.createEmptyBorder(12, 0, 0, 0));
         UIComponents.PrimaryButton save = new UIComponents.PrimaryButton("Save Product");
         save.addActionListener(e -> attemptSave());
+        UIComponents.GhostButton clear = new UIComponents.GhostButton("Clear Form");
+        clear.addActionListener(e -> clearForm());
         UIComponents.GhostButton viewInventory = new UIComponents.GhostButton("View Inventory");
         viewInventory.addActionListener(e -> onSavedToInventory.run());
         UIComponents.GhostButton viewDashboard = new UIComponents.GhostButton("View Dashboard");
         viewDashboard.addActionListener(e -> onSavedToDashboard.run());
         buttons.add(save);
+        buttons.add(clear);
         buttons.add(viewInventory);
         buttons.add(viewDashboard);
 
@@ -331,15 +334,24 @@ public class AddItemPanel extends JPanel {
 
         try {
             Product p = manager.addProduct(name, qty, selectedManualStatus());
-            successLabel.setText("Saved \"" + p.getName() + "\" as " + p.getId()
-                    + " — " + p.getStockStatus().getLabel() + ".");
-            nameField.setText("");
-            qtyField.setText("");
-            statusBox.setSelectedIndex(0);
-            updatePreview();
-            nameField.requestFocusInWindow();
+            Dialogs.notice(getTopLevelAncestor() instanceof java.awt.Window w ? w : null,
+                    "Product Saved",
+                    "\"" + p.getName() + "\" has been saved as " + p.getId()
+                            + " — " + p.getStockStatus().getLabel() + ".");
+            clearForm();
         } catch (InventoryManager.InventoryException ex) {
             errorLabel.setText(ex.getMessage());
         }
+    }
+
+    /** Resets every field, message and the status preview. */
+    private void clearForm() {
+        nameField.setText("");
+        qtyField.setText("");
+        statusBox.setSelectedIndex(0);
+        errorLabel.setText(" ");
+        successLabel.setText(" ");
+        updatePreview();
+        nameField.requestFocusInWindow();
     }
 }

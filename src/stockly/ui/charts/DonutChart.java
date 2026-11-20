@@ -3,6 +3,8 @@ package stockly.ui.charts;
 import stockly.model.StockStatus;
 import stockly.ui.Theme;
 
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -29,10 +31,74 @@ public class DonutChart extends JPanel {
 
     private final Map<StockStatus, Integer> counts = new EnumMap<>(StockStatus.class);
     private int total;
+    private final JLabel tip = new JLabel();
 
     /** Creates an empty chart; call {@link #setData(Map)} to populate. */
     public DonutChart() {
         setOpaque(false);
+        setLayout(null);
+        tip.setFont(Theme.font(11));
+        tip.setForeground(Theme.SURFACE);
+        tip.setBackground(new Color(0x30332F));
+        tip.setOpaque(true);
+        tip.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        tip.setVisible(false);
+        add(tip);
+        attachTooltip();
+    }
+
+    /** Segment lookup used by both painting and hit-testing. */
+    private StockStatus statusAt(int mx, int my) {
+        int w = getWidth();
+        int h = getHeight();
+        int donutSize = Math.min(h - 24, w / 2);
+        int cx = 12 + donutSize / 2;
+        int cy = h / 2;
+        int outer = donutSize / 2 - 6;
+        int inner = (int) (outer * 0.62);
+        double dx = mx - cx, dy = my - cy;
+        double dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < inner || dist > outer || total == 0) {
+            return null;
+        }
+        double angle = Math.atan2(dy, dx); // 0 = east, positive = south (y down)
+        double start = -Math.PI / 2;
+        double pos = angle < start ? angle + 2 * Math.PI : angle;
+        double acc = start;
+        for (StockStatus s : StockStatus.values()) {
+            int c = counts.getOrDefault(s, 0);
+            if (c == 0) continue;
+            double extent = c / (double) total * 2 * Math.PI;
+            acc += extent;
+            if (pos >= acc - extent && pos < acc) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    private void attachTooltip() {
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(java.awt.event.MouseEvent e) {
+                StockStatus s = statusAt(e.getX(), e.getY());
+                if (s == null) {
+                    tip.setVisible(false);
+                    return;
+                }
+                int c = counts.getOrDefault(s, 0);
+                int pct = total == 0 ? 0 : (int) Math.round(c * 100.0 / total);
+                tip.setText(s.getLabel() + " — " + c + " (" + pct + "%)");
+                tip.setSize(tip.getPreferredSize());
+                int tx = Math.min(e.getX() + 14, getWidth() - tip.getWidth() - 4);
+                int ty = Math.max(4, e.getY() - tip.getHeight() - 8);
+                tip.setLocation(tx, ty);
+                tip.setVisible(true);
+            }
+        });
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override public void mouseExited(java.awt.event.MouseEvent e) { tip.setVisible(false); }
+        });
     }
 
     /**
