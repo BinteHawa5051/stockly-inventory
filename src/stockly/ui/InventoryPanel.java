@@ -70,8 +70,6 @@ public class InventoryPanel extends JPanel {
     private final JComboBox<String> sortBox = new JComboBox<>(
             new String[]{"Sort: Name A–Z", "Sort: Name Z–A", "Sort: Qty High→Low", "Sort: Qty Low→High"});
 
-    private String globalSearch = "";
-
     /**
      * Creates the inventory screen.
      *
@@ -308,10 +306,12 @@ public class InventoryPanel extends JPanel {
     // Data
     // ------------------------------------------------------------------
 
-    /** Applies the global top-bar search text (may be empty). */
+    /**
+     * Applies a search query — used by the top-bar global search.
+     * Mirrors into the toolbar field so there is exactly one query.
+     */
     public void setGlobalSearch(String text) {
-        this.globalSearch = text == null ? "" : text.trim().toLowerCase();
-        refresh();
+        searchField.setText(text == null ? "" : text);
     }
 
     /** Rebuilds the table from current filters and inventory data. */
@@ -323,10 +323,9 @@ public class InventoryPanel extends JPanel {
         List<Product> filtered = new ArrayList<>();
         for (Product p : manager.getAllProducts()) {
             boolean nameMatch = local.isEmpty() || p.getName().toLowerCase().contains(local);
-            boolean globalMatch = globalSearch.isEmpty() || p.getName().toLowerCase().contains(globalSearch);
             boolean statusMatch = "All Statuses".equals(status)
                     || p.getStockStatus().getLabel().equals(status);
-            if (nameMatch && globalMatch && statusMatch) {
+            if (nameMatch && statusMatch) {
                 filtered.add(p);
             }
         }

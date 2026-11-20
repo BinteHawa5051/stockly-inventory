@@ -188,8 +188,23 @@ public class InventoryManager {
      * @throws InventoryException when validation fails
      */
     public Product addProduct(String name, int quantity) throws InventoryException {
+        return addProduct(name, quantity, null);
+    }
+
+    /**
+     * Adds a new product with a generated id and optional manual status.
+     *
+     * @param name         product name
+     * @param quantity     stock quantity
+     * @param manualStatus status to pin, or {@code null} for auto classification
+     * @return the created product
+     * @throws InventoryException when validation fails
+     */
+    public Product addProduct(String name, int quantity, StockStatus manualStatus)
+            throws InventoryException {
         validate(name, quantity);
         Product product = new Product(nextId(), name.trim(), quantity);
+        product.setManualStatus(manualStatus);
         products.add(product);
         activityLog.record(ActivityEntry.Kind.ADDED,
                 "Added \"" + product.getName() + "\" (" + product.getQuantity() + " units)");
@@ -207,6 +222,29 @@ public class InventoryManager {
      * @throws InventoryException when validation fails or the id is unknown
      */
     public void updateProduct(String id, String name, int quantity) throws InventoryException {
+        // name/quantity-only update: preserve the existing status mode
+        Product existing = findById(id);
+        updateProduct(id, name, quantity, existing == null ? null : existing.getManualStatus(),
+                true);
+    }
+
+    /**
+     * Updates an existing product including its status mode.
+     *
+     * @param id           id of the product to update
+     * @param name         new product name
+     * @param quantity     new stock quantity
+     * @param manualStatus status to pin, or {@code null} for auto classification
+     * @throws InventoryException when validation fails or the id is unknown
+     */
+    public void updateProduct(String id, String name, int quantity, StockStatus manualStatus)
+            throws InventoryException {
+        updateProduct(id, name, quantity, manualStatus, false);
+    }
+
+    private void updateProduct(String id, String name, int quantity,
+                               StockStatus manualStatus, boolean keepStatus)
+            throws InventoryException {
         validate(name, quantity);
         Product product = findById(id);
         if (product == null) {
@@ -215,6 +253,9 @@ public class InventoryManager {
         String oldDesc = product.getName() + " (" + product.getQuantity() + " units)";
         product.setName(name.trim());
         product.setQuantity(quantity);
+        if (!keepStatus) {
+            product.setManualStatus(manualStatus);
+        }
         activityLog.record(ActivityEntry.Kind.UPDATED,
                 "Updated \"" + product.getName() + "\" — was " + oldDesc);
         save();
@@ -256,10 +297,15 @@ public class InventoryManager {
     }
 
     // ------------------------------------------------------------------
-    // Persistence (simple CSV: id,name,quantity)
+    // Persistence (simple CSV: id,name,quantity,status)
     // ------------------------------------------------------------------
 
-    /** Loads products from the CSV file; silently starts empty on errors. */
+    /**
+     * Loads products from the CSV file. A malformed line is skipped
+     * individually so one bad row never wipes out the whole inventory;
+     * the 4th column (manual status) is optional for backward
+     * compatibility with older files.
+     */
     private void load() {
         if (!Files.exists(storageFile)) {
             return;
@@ -270,23 +316,77 @@ public class InventoryManager {
                 if (line.isBlank()) {
                     continue;
                 }
-                String[] parts = line.split(",", 3);
-                if (parts.length == 3) {
-                    products.add(new Product(parts[0], parts[1], Integer.parseInt(parts[2].trim())));
+                try {
+                    String[] parts = parseCsvLine(line);
+                    if (parts.length >= 3) {
+                        Product p = new Product(parts[0], parts[1],
+                                Integer.parseInt(parts[2].trim()));
+                        if (parts.length >= 4 && !parts[3].isBlank()) {
+                            try {
+                                p.setManualStatus(StockStatus.valueOf(parts[3].trim()));
+                            } catch (IllegalArgumentException badStatus) {
+                                // unknown status value — keep product, use auto mode
+                            }
+                        }
+                        products.add(p);
+                    }
+                } catch (IllegalArgumentException e) {
+                    // skip this row only — keep loading the rest
+                    System.err.println("Skipping malformed inventory row: " + line);
                 }
             }
-        } catch (IOException | NumberFormatException e) {
+        } catch (IOException e) {
             System.err.println("Could not load inventory file: " + e.getMessage());
         }
+    }
+
+    /**
+     * Minimal CSV line parser that understands double-quoted fields
+     * with {@code ""} escapes, so product names containing commas or
+     * quotes round-trip correctly.
+     *
+     * @param line a single CSV record
+     * @return the field values
+     */
+    private static String[] parseCsvLine(String line) {
+        java.util.List<String> fields = new java.util.ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean inQuotes = false;
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
+            if (inQuotes) {
+                if (c == '"') {
+                    if (i + 1 < line.length() && line.charAt(i + 1) == '"') {
+                        current.append('"');
+                        i++;
+                    } else {
+                        inQuotes = false;
+                    }
+                } else {
+                    current.append(c);
+                }
+            } else if (c == '"') {
+                inQuotes = true;
+            } else if (c == ',') {
+                fields.add(current.toString());
+                current.setLength(0);
+            } else {
+                current.append(c);
+            }
+        }
+        fields.add(current.toString());
+        return fields.toArray(new String[0]);
     }
 
     /** Writes all products back to the CSV file. */
     private void save() {
         try (BufferedWriter writer = Files.newBufferedWriter(storageFile, StandardCharsets.UTF_8)) {
-            writer.write("id,name,quantity");
+            writer.write("id,name,quantity,status");
             writer.newLine();
             for (Product p : products) {
-                writer.write(String.join(",", p.getId(), escape(p.getName()), String.valueOf(p.getQuantity())));
+                String status = p.getManualStatus() == null ? "" : p.getManualStatus().name();
+                writer.write(String.join(",", p.getId(), escape(p.getName()),
+                        String.valueOf(p.getQuantity()), status));
                 writer.newLine();
             }
         } catch (IOException e) {

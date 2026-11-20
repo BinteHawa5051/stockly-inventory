@@ -213,7 +213,7 @@ public class Sidebar extends JPanel {
 
         public void setActive(boolean a) {
             this.active = a;
-            setForeground(active ? Theme.SURFACE : new Color(0xDDE3D6));
+            setForeground(active ? Theme.FOREST : new Color(0xDDE3D6));
             setFont(active ? Theme.bold(13) : Theme.font(13));
             repaint();
         }

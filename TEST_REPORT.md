@@ -46,8 +46,16 @@ TC-14  CSV persistence across restarts                            PASS
        actual: reloaded 7 products
 TC-15  Recent activity records real session events                PASS
        actual: 5 entries, 2 deletions
+TC-16  Manual stock-status override                               PASS
+       actual: qty=50 but status pinned to OUT_OF_STOCK
+TC-17  Manual status persists across restarts                     PASS
+       actual: reloaded status=OUT_OF_STOCK
+TC-18  Product name containing comma survives CSV                 PASS
+       actual: name=Stapler, Heavy Duty
+TC-19  Malformed CSV row skipped gracefully                       PASS
+       actual: loaded 2 of 3 rows; P002 manual status=LOW_STOCK
 
-RESULT: 15 passed, 0 failed
+RESULT: 19 passed, 0 failed
 ```
 
 ## Test case details
@@ -69,6 +77,10 @@ RESULT: 15 passed, 0 failed
 | TC-13 | Charts update | read live collections | Chart data == manager totals | `unitsSum == totalUnits()`; status counts sum to productCount | PASS |
 | TC-14 | CSV persistence | reload from disk | Same products after restart | 7 products reloaded; deleted item stayed deleted | PASS |
 | TC-15 | Activity log | perform CRUD | Session events recorded | 5 entries incl. deletions with timestamps | PASS |
+| TC-16 | Manual status override | addProduct("Pinned Item", 50, OUT_OF_STOCK) | Status pinned despite qty=50 | `getStockStatus()` → OUT_OF_STOCK | PASS |
+| TC-17 | Status persistence | reload CSV | Manual status survives restart | Reloaded product still OUT_OF_STOCK | PASS |
+| TC-18 | Comma in name | "Stapler, Heavy Duty" | CSV round-trips quoted field | Name intact after reload | PASS |
+| TC-19 | Malformed CSV | file with bad row | Bad row skipped, rest load | 2 of 3 rows loaded; manual status parsed | PASS |
 
 ## Manual GUI verification
 

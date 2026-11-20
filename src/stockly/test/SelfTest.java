@@ -144,6 +144,43 @@ public final class SelfTest {
                 log.size() >= 4 && deletes >= 1,
                 log.size() + " entries, " + deletes + " deletions");
 
+        // TC-16 manual status override
+        Product pinned = m.addProduct("Pinned Item", 50, StockStatus.OUT_OF_STOCK);
+        check("TC-16", "Manual stock-status override",
+                pinned.getStockStatus() == StockStatus.OUT_OF_STOCK
+                        && pinned.getManualStatus() == StockStatus.OUT_OF_STOCK,
+                "qty=50 but status pinned to OUT_OF_STOCK");
+
+        // TC-17 override survives CSV round-trip
+        InventoryManager reloaded2 = new InventoryManager(temp.resolve("inv.csv"));
+        Product pinnedReloaded = reloaded2.findById(pinned.getId());
+        check("TC-17", "Manual status persists across restarts",
+                pinnedReloaded != null
+                        && pinnedReloaded.getStockStatus() == StockStatus.OUT_OF_STOCK
+                        && pinnedReloaded.getManualStatus() == StockStatus.OUT_OF_STOCK,
+                "reloaded status=" + (pinnedReloaded == null ? "null" : pinnedReloaded.getStockStatus()));
+
+        // TC-18 quoted/comma name round-trips through CSV
+        Product comma = m.addProduct("Stapler, Heavy Duty", 8);
+        InventoryManager reloaded3 = new InventoryManager(temp.resolve("inv.csv"));
+        Product commaReloaded = reloaded3.findById(comma.getId());
+        check("TC-18", "Product name containing comma survives CSV",
+                commaReloaded != null && commaReloaded.getName().equals("Stapler, Heavy Duty"),
+                "name=" + (commaReloaded == null ? "null" : commaReloaded.getName()));
+
+        // TC-19 malformed CSV row is skipped, rest still load
+        Path badFile = temp.resolve("bad.csv");
+        Files.writeString(badFile, "id,name,quantity,status\n"
+                + "P001,Good,5,\n"
+                + "BADROW,no-qty-here\n"
+                + "P002,Also Good,9,LOW_STOCK\n");
+        InventoryManager bad = new InventoryManager(badFile);
+        check("TC-19", "Malformed CSV row skipped gracefully",
+                bad.productCount() == 2
+                        && bad.findById("P002").getStockStatus() == StockStatus.LOW_STOCK,
+                "loaded " + bad.productCount() + " of 3 rows; P002 manual status="
+                        + bad.findById("P002").getStockStatus());
+
         System.out.println();
         System.out.println("RESULT: " + passed + " passed, " + failed + " failed");
         System.exit(failed == 0 ? 0 : 1);

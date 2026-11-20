@@ -39,6 +39,8 @@ public class ProductDialog extends JDialog {
     private final String editingId; // null → add mode
     private final JTextField nameField = new JTextField();
     private final JTextField qtyField = new JTextField();
+    private final javax.swing.JComboBox<String> statusBox = new javax.swing.JComboBox<>(
+            new String[]{"Auto (from quantity)", "In Stock", "Low Stock", "Out of Stock"});
     private final JLabel statusPreview = new JLabel(" ");
     private final JLabel errorLabel = new JLabel(" ");
     private boolean saved;
@@ -100,6 +102,16 @@ public class ProductDialog extends JDialog {
 
         gbc.gridy = 2;
         gbc.gridx = 0;
+        gbc.weightx = 0;
+        body.add(fieldLabel("Stock Status"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        styleCombo(statusBox);
+        statusBox.addActionListener(e -> updatePreview());
+        body.add(statusBox, gbc);
+
+        gbc.gridy = 3;
+        gbc.gridx = 0;
         gbc.gridwidth = 2;
         JPanel previewRow = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 8, 0));
         previewRow.setOpaque(false);
@@ -111,7 +123,7 @@ public class ProductDialog extends JDialog {
         previewRow.add(statusPreview);
         body.add(previewRow, gbc);
 
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         errorLabel.setFont(Theme.font(12));
         errorLabel.setForeground(new Color(0xB0534A));
         errorLabel.setBorder(BorderFactory.createEmptyBorder(4, 0, 0, 0));
@@ -138,6 +150,9 @@ public class ProductDialog extends JDialog {
             if (p != null) {
                 nameField.setText(p.getName());
                 qtyField.setText(String.valueOf(p.getQuantity()));
+                if (p.getManualStatus() != null) {
+                    statusBox.setSelectedItem(p.getManualStatus().getLabel());
+                }
             } else {
                 showError("This product no longer exists. It may have been deleted.");
                 save.setEnabled(false);
@@ -176,8 +191,18 @@ public class ProductDialog extends JDialog {
                 BorderFactory.createEmptyBorder(8, 10, 8, 10)));
     }
 
-    /** Shows the status the current quantity will produce. */
+    /** Shows the status that will actually be saved. */
     private void updatePreview() {
+        String selected = (String) statusBox.getSelectedItem();
+        if (selected != null && !selected.startsWith("Auto")) {
+            for (stockly.model.StockStatus s : stockly.model.StockStatus.values()) {
+                if (s.getLabel().equals(selected)) {
+                    statusPreview.setText(s.getLabel());
+                    statusPreview.setForeground(s.getColor());
+                    return;
+                }
+            }
+        }
         try {
             int q = Integer.parseInt(qtyField.getText().trim());
             if (q < 0) {
@@ -186,12 +211,36 @@ public class ProductDialog extends JDialog {
                 return;
             }
             stockly.model.StockStatus s = new stockly.model.Product("tmp", "", q).getStockStatus();
-            statusPreview.setText(s.getLabel());
+            statusPreview.setText(s.getLabel() + " (auto)");
             statusPreview.setForeground(s.getColor());
         } catch (NumberFormatException e) {
             statusPreview.setText("—");
             statusPreview.setForeground(Theme.TEXT_MUTED);
         }
+    }
+
+    /** Maps the combo selection to a manual status, or {@code null} for auto. */
+    private stockly.model.StockStatus selectedManualStatus() {
+        String selected = (String) statusBox.getSelectedItem();
+        if (selected == null || selected.startsWith("Auto")) {
+            return null;
+        }
+        for (stockly.model.StockStatus s : stockly.model.StockStatus.values()) {
+            if (s.getLabel().equals(selected)) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    private void styleCombo(javax.swing.JComboBox<String> combo) {
+        combo.setFont(Theme.font(13));
+        combo.setForeground(Theme.TEXT);
+        combo.setBackground(Theme.SURFACE);
+        combo.setPreferredSize(new Dimension(280, 36));
+        combo.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Theme.BORDER, 1, true),
+                BorderFactory.createEmptyBorder(4, 10, 4, 10)));
     }
 
     private void showError(String msg) {
@@ -229,9 +278,9 @@ public class ProductDialog extends JDialog {
 
         try {
             if (editingId == null) {
-                manager.addProduct(name, qty);
+                manager.addProduct(name, qty, selectedManualStatus());
             } else {
-                manager.updateProduct(editingId, name, qty);
+                manager.updateProduct(editingId, name, qty, selectedManualStatus());
             }
             saved = true;
             dispose();

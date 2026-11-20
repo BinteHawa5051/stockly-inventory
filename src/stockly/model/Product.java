@@ -23,6 +23,9 @@ public class Product {
     private String id;
     private String name;
     private int quantity;
+    // Optional user-selected status. When null the status is derived
+    // automatically from the quantity (see getStockStatus()).
+    private StockStatus manualStatus;
 
     /**
      * Creates a new product.
@@ -71,6 +74,26 @@ public class Product {
     }
 
     /**
+     * Returns the manually selected stock status, or {@code null} when
+     * the status is derived automatically from the quantity.
+     *
+     * @return the manual status override, or {@code null} for auto mode
+     */
+    public StockStatus getManualStatus() {
+        return manualStatus;
+    }
+
+    /**
+     * Sets an optional manual status override.
+     *
+     * @param status the status to pin, or {@code null} to return to
+     *               automatic quantity-based classification
+     */
+    public void setManualStatus(StockStatus status) {
+        this.manualStatus = status;
+    }
+
+    /**
      * Sets the stock quantity.
      *
      * @param quantity the new quantity (must be {@code >= 0})
@@ -90,6 +113,9 @@ public class Product {
      * @return the stock status matching the current quantity
      */
     public StockStatus getStockStatus() {
+        if (manualStatus != null) {
+            return manualStatus;
+        }
         if (quantity == 0) {
             return StockStatus.OUT_OF_STOCK;
         }
