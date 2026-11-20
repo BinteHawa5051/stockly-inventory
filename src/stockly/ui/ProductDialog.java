@@ -39,6 +39,7 @@ public class ProductDialog extends JDialog {
     private final String editingId; // null → add mode
     private final JTextField nameField = new JTextField();
     private final JTextField qtyField = new JTextField();
+    private final JLabel statusPreview = new JLabel(" ");
     private final JLabel errorLabel = new JLabel(" ");
     private boolean saved;
 
@@ -100,6 +101,17 @@ public class ProductDialog extends JDialog {
         gbc.gridy = 2;
         gbc.gridx = 0;
         gbc.gridwidth = 2;
+        JPanel previewRow = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 8, 0));
+        previewRow.setOpaque(false);
+        JLabel previewCaption = new JLabel("Stock status:");
+        previewCaption.setFont(Theme.font(12));
+        previewCaption.setForeground(Theme.TEXT_MUTED);
+        statusPreview.setFont(Theme.bold(12));
+        previewRow.add(previewCaption);
+        previewRow.add(statusPreview);
+        body.add(previewRow, gbc);
+
+        gbc.gridy = 3;
         errorLabel.setFont(Theme.font(12));
         errorLabel.setForeground(new Color(0xB0534A));
         errorLabel.setBorder(BorderFactory.createEmptyBorder(4, 0, 0, 0));
@@ -132,6 +144,14 @@ public class ProductDialog extends JDialog {
             }
         }
 
+        // live stock-status preview — status is always derived from quantity
+        qtyField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override public void insertUpdate(javax.swing.event.DocumentEvent e) { updatePreview(); }
+            @Override public void removeUpdate(javax.swing.event.DocumentEvent e) { updatePreview(); }
+            @Override public void changedUpdate(javax.swing.event.DocumentEvent e) { updatePreview(); }
+        });
+        updatePreview();
+
         // Enter key saves
         nameField.addActionListener(e -> attemptSave());
         qtyField.addActionListener(e -> attemptSave());
@@ -154,6 +174,24 @@ public class ProductDialog extends JDialog {
         f.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Theme.BORDER, 1, true),
                 BorderFactory.createEmptyBorder(8, 10, 8, 10)));
+    }
+
+    /** Shows the status the current quantity will produce. */
+    private void updatePreview() {
+        try {
+            int q = Integer.parseInt(qtyField.getText().trim());
+            if (q < 0) {
+                statusPreview.setText("—");
+                statusPreview.setForeground(Theme.TEXT_MUTED);
+                return;
+            }
+            stockly.model.StockStatus s = new stockly.model.Product("tmp", "", q).getStockStatus();
+            statusPreview.setText(s.getLabel());
+            statusPreview.setForeground(s.getColor());
+        } catch (NumberFormatException e) {
+            statusPreview.setText("—");
+            statusPreview.setForeground(Theme.TEXT_MUTED);
+        }
     }
 
     private void showError(String msg) {

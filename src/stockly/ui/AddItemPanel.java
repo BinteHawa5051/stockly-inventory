@@ -30,6 +30,7 @@ public class AddItemPanel extends JPanel {
 
     private final JTextField nameField = new JTextField();
     private final JTextField qtyField = new JTextField();
+    private final JLabel statusPreview = new JLabel(" ");
     private final JLabel errorLabel = new JLabel(" ");
     private final JLabel successLabel = new JLabel(" ");
 
@@ -69,12 +70,24 @@ public class AddItemPanel extends JPanel {
         form.add(qtyField, gbc);
 
         gbc.gridy = 2; gbc.gridx = 0; gbc.gridwidth = 2; gbc.weightx = 1;
+        JPanel previewRow = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 8, 0));
+        previewRow.setOpaque(false);
+        JLabel previewCaption = new JLabel("Stock status:");
+        previewCaption.setFont(Theme.font(12));
+        previewCaption.setForeground(Theme.TEXT_MUTED);
+        statusPreview.setFont(Theme.bold(12));
+        previewRow.add(previewCaption);
+        previewRow.add(statusPreview);
+        previewRow.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
+        form.add(previewRow, gbc);
+
+        gbc.gridy = 3;
         errorLabel.setFont(Theme.font(12));
         errorLabel.setForeground(new Color(0xB0534A));
         errorLabel.setBorder(BorderFactory.createEmptyBorder(4, 0, 0, 0));
         form.add(errorLabel, gbc);
 
-        gbc.gridy = 3; gbc.gridx = 0; gbc.gridwidth = 2;
+        gbc.gridy = 4; gbc.gridx = 0; gbc.gridwidth = 2;
         successLabel.setFont(Theme.font(12));
         successLabel.setForeground(Theme.CHART_IN_STOCK);
         form.add(successLabel, gbc);
@@ -92,12 +105,38 @@ public class AddItemPanel extends JPanel {
         buttons.add(viewInventory);
         buttons.add(viewDashboard);
 
-        gbc.gridy = 4; gbc.gridx = 0; gbc.gridwidth = 2;
+        gbc.gridy = 5; gbc.gridx = 0; gbc.gridwidth = 2;
         form.add(buttons, gbc);
+
+        // live stock-status preview — status is always derived from quantity
+        qtyField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override public void insertUpdate(javax.swing.event.DocumentEvent e) { updatePreview(); }
+            @Override public void removeUpdate(javax.swing.event.DocumentEvent e) { updatePreview(); }
+            @Override public void changedUpdate(javax.swing.event.DocumentEvent e) { updatePreview(); }
+        });
+        updatePreview();
 
         add(form, BorderLayout.NORTH);
         nameField.addActionListener(e -> attemptSave());
         qtyField.addActionListener(e -> attemptSave());
+    }
+
+    /** Shows the status the current quantity will produce. */
+    private void updatePreview() {
+        try {
+            int q = Integer.parseInt(qtyField.getText().trim());
+            if (q < 0) {
+                statusPreview.setText("—");
+                statusPreview.setForeground(Theme.TEXT_MUTED);
+                return;
+            }
+            stockly.model.StockStatus s = new stockly.model.Product("tmp", "", q).getStockStatus();
+            statusPreview.setText(s.getLabel());
+            statusPreview.setForeground(s.getColor());
+        } catch (NumberFormatException e) {
+            statusPreview.setText("—");
+            statusPreview.setForeground(Theme.TEXT_MUTED);
+        }
     }
 
     private JLabel fieldLabel(String text) {

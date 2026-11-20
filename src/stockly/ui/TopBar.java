@@ -70,7 +70,8 @@ public class TopBar extends JPanel {
             @Override public void changedUpdate(javax.swing.event.DocumentEvent e) { fire(); }
             private void fire() {
                 onSearch.actionPerformed(new java.awt.event.ActionEvent(
-                        search.getText().trim(), java.awt.event.ActionEvent.ACTION_PERFORMED, "search"));
+                        search, java.awt.event.ActionEvent.ACTION_PERFORMED,
+                        search.getText().trim()));
             }
         });
 
