@@ -84,8 +84,13 @@ public class DonutChart extends JPanel {
         int w = getWidth();
         int h = getHeight();
 
-        // Donut occupies a centred square on the left ~55% of the width.
-        int donutSize = Math.min(h - 16, (int) (w * 0.52));
+        // Measure the legend first so the donut can shrink to make room.
+        FontMetrics fm = legendMetrics(g2);
+        int legendW = legendWidth(fm);
+
+        // Donut occupies the left area; legend is right-anchored with a
+        // guaranteed gap. Shrink the donut if the panel is too narrow.
+        int donutSize = donutSizeFor(w, h, legendW);
         int cx = 8 + donutSize / 2;
         int cy = h / 2;
         int outer = donutSize / 2 - 4;
@@ -98,7 +103,7 @@ public class DonutChart extends JPanel {
             drawRing(g2, cx, cy, outer, inner, ring);
             drawCenter(g2, cx, cy, inner);
         }
-        drawLegend(g2, (int) (w * 0.60), cy);
+        drawLegend(g2, w - legendW - 8, cy, fm);
         g2.dispose();
     }
 
@@ -159,7 +164,7 @@ public class DonutChart extends JPanel {
         g2.drawString(msg, cx - fm.stringWidth(msg) / 2, cy);
     }
 
-    private void drawLegend(Graphics2D g2, int x, int cy) {
+    private void drawLegend(Graphics2D g2, int x, int cy, FontMetrics fm) {
         int rowH = 30;
         int y = cy - (rowH * ORDER.size()) / 2;
         g2.setFont(Theme.font(12));
@@ -178,17 +183,51 @@ public class DonutChart extends JPanel {
 
             g2.setColor(Theme.TEXT_MUTED);
             String right = count + " · " + pct + "%";
-            g2.drawString(right, x + 18 + g2.getFontMetrics().stringWidth(s.getLabel()) + 14,
+            g2.drawString(right, x + 18 + fm.stringWidth(s.getLabel()) + 14,
                     y + 15);
             y += rowH;
         }
     }
 
-    /** Segment under the mouse, or null. */
+    /** FontMetrics with the legend font applied. */
+    private FontMetrics legendMetrics(Graphics2D g2) {
+        g2.setFont(Theme.font(12));
+        return g2.getFontMetrics();
+    }
+
+    /** Widest legend row in pixels. */
+    private int legendWidth(FontMetrics fm) {
+        int legendW = 0;
+        for (StockStatus s : ORDER) {
+            int count = counts.getOrDefault(s, 0);
+            int pct = total == 0 ? 0 : (int) Math.round(count * 100.0 / total);
+            int rowW = 18 + fm.stringWidth(s.getLabel()) + 14
+                    + fm.stringWidth(count + " · " + pct + "%");
+            legendW = Math.max(legendW, rowW);
+        }
+        return legendW;
+    }
+
+    /** Donut side length, shrinking until the legend fits beside it. */
+    private int donutSizeFor(int w, int h, int legendW) {
+        int donutSize = Math.min(h - 16, (int) (w * 0.52));
+        while (donutSize > 90 && 8 + donutSize + 28 + legendW > w - 8) {
+            donutSize -= 8;
+        }
+        return donutSize;
+    }
+
+    /** Segment under the mouse, or null. Mirrors paintComponent geometry. */
     private StockStatus statusAt(int mx, int my) {
         int w = getWidth();
         int h = getHeight();
-        int donutSize = Math.min(h - 16, (int) (w * 0.52));
+        java.awt.image.BufferedImage tmp = new java.awt.image.BufferedImage(1, 1,
+                java.awt.image.BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = tmp.createGraphics();
+        FontMetrics fm = legendMetrics(g2);
+        int legendW = legendWidth(fm);
+        g2.dispose();
+        int donutSize = donutSizeFor(w, h, legendW);
         int cx = 8 + donutSize / 2;
         int cy = h / 2;
         int outer = donutSize / 2 - 4;
