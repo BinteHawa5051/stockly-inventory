@@ -3,3 +3,4 @@ lib/
 inventory.csv
 *.iml
 .idea/
+.devin/
