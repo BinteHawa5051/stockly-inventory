@@ -1,28 +1,42 @@
 # STOCKLY — Premium Inventory Management System
 
 A polished Java Swing desktop application for managing product inventory:
-live dashboard statistics, custom-drawn charts, CSV persistence and a
-warm, boutique-retail visual identity.
+live dashboard statistics, custom-drawn charts, CSV persistence, a
+configurable low-stock threshold and a warm, boutique-retail visual
+identity.
 
-![Dashboard](docs/screenshots/dashboard.png)
+![Dashboard](screenshots/01_dashboard.png)
 
 ## Features
 
-- **Dashboard** — four live stat cards (products, units, low stock,
-  out of stock), a donut chart of stock-status distribution, a per-product
-  quantity bar chart, a stock-health overview and a session activity feed.
-- **Inventory** — searchable, filterable and sortable product table with
-  stock-status badges, inline edit/delete actions and a designed
-  empty state.
+- **Dashboard** — four live KPI cards, a donut chart of stock-status
+  distribution, a per-product quantity bar chart (coloured by status),
+  a stock-health overview, a "Needs Restock" alert list with quick-edit
+  and a session activity feed.
+- **Inventory** — stats strip, single toolbar (search, status filter
+  incl. "Needs Attention", 4 sort modes, clear-filters), styled table
+  with status pills and view/edit/delete row actions, tooltips and a
+  designed empty state.
 - **Add New Item** — dedicated form page plus a modal add/edit dialog
-  with full input validation.
-- **Analytics** — deeper distribution and breakdown views.
-- **Settings / About** — app info, data-file location and status rules.
-- **Persistence** — inventory is stored in `inventory.csv` (CSV format)
-  and survives restarts. Delete the file to reset to demo data.
-- **Stock status** is *derived* from quantity, never stored or chosen
-  manually: `0` → Out of Stock, `1–5` → Low Stock, `6+` → In Stock
-  (threshold: `Product.LOW_STOCK_THRESHOLD`).
+  with placeholders, a stock-status selector (Auto / In Stock / Low
+  Stock / Out of Stock), live status preview and inline validation.
+- **Product details** — read-only dialog opened from the table's view
+  action, with an Edit shortcut.
+- **Analytics** — KPI cards, large distribution donut, status
+  breakdown table, quantity comparison bars and auto-calculated
+  insight cards. All values computed live; no fabricated trends.
+- **Settings** — application profile, low-stock threshold spinner
+  (applies instantly app-wide), delete-confirmation toggle, palette
+  preview, CSV export/import, clear inventory and an About section.
+- **Persistence** — `inventory.csv` (quoted-field safe) survives
+  restarts; preferences persist in `stockly.properties`.
+- **Stock status** — derived from quantity by default:
+  `0` → Out of Stock, `1–threshold` → Low Stock, above → In Stock.
+  The threshold defaults to 5 and is configurable in Settings
+  (`AppConfig`). Users may optionally pin a manual status per product;
+  "Auto" mode keeps status consistent with quantity.
+- **Activity log** — every add/update/delete is recorded and shown on
+  the dashboard and in the notification bell.
 
 ## Requirements
 
@@ -37,35 +51,45 @@ SC OEL/
 │   └── stockly/
 │       ├── Main.java                  # entry point
 │       ├── model/
-│       │   ├── Product.java           # product entity + status logic
+│       │   ├── Product.java           # entity + status logic
 │       │   ├── StockStatus.java       # status enum (label + color)
 │       │   ├── ActivityEntry.java     # single activity record
 │       │   ├── ActivityLog.java       # session activity feed
-│       │   └── InventoryManager.java  # CRUD, validation, CSV, listeners
+│       │   ├── AppConfig.java         # persisted preferences
+│       │   └── InventoryManager.java  # CRUD, validation, CSV, stats
 │       ├── ui/
 │       │   ├── Theme.java             # colors, fonts, metrics
 │       │   ├── Icon.java              # vector icon set (Graphics2D)
 │       │   ├── UIComponents.java      # cards, buttons, badges
+│       │   ├── TableKit.java          # table chrome helpers
+│       │   ├── Dialogs.java           # styled confirm/notice dialogs
+│       │   ├── PromptField.java       # placeholder text field
+│       │   ├── ScrollBarKit.java      # thin themed scrollbars
 │       │   ├── Sidebar.java           # navigation sidebar
-│       │   ├── TopBar.java            # title bar + search + date
+│       │   ├── TopBar.java            # title bar + bell + date
 │       │   ├── MainFrame.java         # window shell + page switching
 │       │   ├── DashboardPanel.java    # stats + charts + activity
 │       │   ├── InventoryPanel.java    # table, filters, row actions
-│       │   ├── AddItemPanel.java      # inline add-product form
+│       │   ├── AddItemPanel.java      # dedicated add-product form
 │       │   ├── ProductDialog.java     # modal add/edit form
+│       │   ├── ProductDetailsDialog.java # read-only details view
 │       │   ├── AnalyticsPanel.java    # analytics views
-│       │   ├── SettingsPanel.java     # about / info page
+│       │   └── SettingsPanel.java     # prefs / data / about
 │       │   └── charts/
 │       │       ├── DonutChart.java    # status distribution donut
 │       │       └── QuantityBarChart.java # per-product bar chart
 │       └── test/
-│           ├── SelfTest.java          # headless scenario tests
-│           └── Screenshot.java        # screen-capture utility
-├── classes/                           # compiled output (git-ignored)
+│           ├── SelfTest.java          # 22 headless model tests
+│           ├── UITest.java            # 13 headed UI tests
+│           ├── Screenshot.java        # page screenshot utility
+│           └── ReportShots.java       # full report screenshot set
+├── classes/                           # compiled output
 ├── docs/
 │   ├── javadoc/                       # generated HTML documentation
 │   └── screenshots/                   # application screenshots
+├── screenshots/                       # report screenshot set (17)
 ├── inventory.csv                      # persisted data (created on run)
+├── stockly.properties                 # saved preferences
 └── sources.txt                        # javac file list
 ```
 
@@ -74,7 +98,7 @@ SC OEL/
 ### Command line
 
 ```bash
-# compile
+# compile (regenerate sources.txt only if you add .java files)
 javac -d classes -encoding UTF-8 @sources.txt
 
 # run
@@ -82,7 +106,7 @@ java -cp classes stockly.Main
 ```
 
 `inventory.csv` is created automatically in the working directory on
-first launch, seeded with demo products.
+first launch, seeded with demo products. Delete it to reset.
 
 ### IntelliJ IDEA
 
@@ -101,19 +125,28 @@ first launch, seeded with demo products.
 
 ### VS Code
 
-Install the *Extension Pack for Java*, open the folder, then run
-`stockly.Main` from the Run view.
+Open the folder and use the integrated terminal:
+
+```powershell
+javac -d classes -encoding UTF-8 @sources.txt
+java -cp classes stockly.Main
+```
+
+The **Extension Pack for Java** is optional (navigation/autocomplete);
+compilation works with the plain JDK on PATH. A ready-made
+`.vscode/tasks.json` can be added for Run Task support.
 
 ## Testing
 
-A headless self-test exercises every OEL scenario (add/edit/delete,
-validation, status boundaries, statistics, persistence, activity log):
+Two executable test suites — no framework required:
 
 ```bash
-java -cp classes stockly.test.SelfTest
+java -cp classes stockly.test.SelfTest   # 22 model/business-logic tests
+java -cp classes stockly.test.UITest     # 13 headed UI tests
 ```
 
-See [TEST_REPORT.md](TEST_REPORT.md) for the executed results.
+Latest executed results: **22/22 PASS** and **13/13 PASS**.
+See [TEST_REPORT.md](TEST_REPORT.md) for the full case table.
 
 ## Javadoc
 
@@ -132,13 +165,19 @@ verification commands and GitHub upload instructions.
 
 ## Screenshots
 
+Report set (17 states) in `screenshots/` — regenerate with:
+
+```bash
+java -cp classes stockly.test.ReportShots
+```
+
 | Dashboard | Inventory |
 |---|---|
-| ![Dashboard](docs/screenshots/dashboard.png) | ![Inventory](docs/screenshots/inventory.png) |
+| ![Dashboard](screenshots/01_dashboard.png) | ![Inventory](screenshots/02_inventory.png) |
 
-| Add Item | Analytics | Settings |
-|---|---|---|
-| ![Add](docs/screenshots/add-item.png) | ![Analytics](docs/screenshots/analytics.png) | ![Settings](docs/screenshots/settings.png) |
+| Analytics | Settings |
+|---|---|
+| ![Analytics](screenshots/13_analytics.png) | ![Settings](screenshots/14_settings.png) |
 
 ## Design notes
 
