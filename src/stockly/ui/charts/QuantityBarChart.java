@@ -23,7 +23,7 @@ import java.util.List;
  * max-value gridline and numeric value label complete each row.
  * When the product list is long the chart scrolls vertically.
  *
- * @author Tooba Akram &amp; Abeeha Noor
+ * @author Tooba Akram and Abeeha Noor
  * @version 1.0
  */
 public class QuantityBarChart extends JPanel {

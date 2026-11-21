@@ -8,7 +8,7 @@ package stockly.model;
  * quantity via {@link #getStockStatus()} so it can never become
  * inconsistent with the actual quantity.
  *
- * @author Tooba Akram &amp; Abeeha Noor
+ * @author Tooba Akram and Abeeha Noor
  * @version 1.0
  */
 public class Product {

@@ -15,7 +15,7 @@ import java.nio.file.Paths;
  * match the OS) and launches the main window on the event-dispatch
  * thread as required by Swing.
  *
- * @author Tooba Akram &amp; Abeeha Noor
+ * @author Tooba Akram and Abeeha Noor
  * @version 1.0
  */
 public final class Main {

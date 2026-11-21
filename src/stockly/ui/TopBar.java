@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
  * and a notification bell plus today's date on the right. Search lives
  * in the Inventory page toolbar — there is exactly one search field.
  *
- * @author Tooba Akram &amp; Abeeha Noor
+ * @author Tooba Akram and Abeeha Noor
  * @version 1.0
  */
 public class TopBar extends JPanel {

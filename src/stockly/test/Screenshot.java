@@ -21,7 +21,7 @@ import java.nio.file.Paths;
  * </pre>
  * Output PNGs are written to {@code docs/screenshots/}.
  *
- * @author Tooba Akram &amp; Abeeha Noor
+ * @author Tooba Akram and Abeeha Noor
  * @version 1.0
  */
 public final class Screenshot {

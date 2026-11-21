@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Modal dialogs are driven by background threads that locate and
  * click their buttons.
  *
- * @author Tooba Akram &amp; Abeeha Noor
+ * @author Tooba Akram and Abeeha Noor
  * @version 1.0
  */
 public class UITest {

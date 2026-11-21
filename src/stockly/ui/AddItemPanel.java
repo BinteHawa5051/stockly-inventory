@@ -31,7 +31,7 @@ import java.awt.RenderingHints;
  * status that will be saved. Validation mirrors
  * {@link InventoryManager} and {@link ProductDialog}.
  *
- * @author Tooba Akram &amp; Abeeha Noor
+ * @author Tooba Akram and Abeeha Noor
  * @version 1.0
  */
 public class AddItemPanel extends JPanel {

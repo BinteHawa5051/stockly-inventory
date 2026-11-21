@@ -10,7 +10,7 @@ import java.awt.Dimension;
  * Scrollbars only appear when content overflows and are rendered as a
  * slim sage thumb on a transparent track, matching the app palette.
  *
- * @author Tooba Akram &amp; Abeeha Noor
+ * @author Tooba Akram and Abeeha Noor
  * @version 1.0
  */
 public final class ScrollBarKit {

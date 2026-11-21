@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
  * only. It is intentionally not persisted to disk: the feed is meant to
  * show what the user actually did during this run.
  *
- * @author Tooba Akram &amp; Abeeha Noor
+ * @author Tooba Akram and Abeeha Noor
  * @version 1.0
  */
 public class ActivityEntry {

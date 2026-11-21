@@ -24,7 +24,7 @@ import java.nio.file.Paths;
  * actions route through {@link Dialogs} confirmations and honour the
  * delete-confirmation preference in {@link AppConfig}.
  *
- * @author Tooba Akram &amp; Abeeha Noor
+ * @author Tooba Akram and Abeeha Noor
  * @version 1.0
  */
 public class MainFrame extends JFrame {

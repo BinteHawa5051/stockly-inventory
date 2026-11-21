@@ -30,7 +30,7 @@ import java.awt.event.WindowEvent;
  * a friendly message area. On success the dialog closes and the
  * manager has already persisted and broadcast the change.
  *
- * @author Tooba Akram &amp; Abeeha Noor
+ * @author Tooba Akram and Abeeha Noor
  * @version 1.0
  */
 public class ProductDialog extends JDialog {

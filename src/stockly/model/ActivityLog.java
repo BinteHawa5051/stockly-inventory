@@ -11,7 +11,7 @@ import java.util.List;
  * intentionally session-scoped: entries describe actions the user
  * actually performed while the application was running.
  *
- * @author Tooba Akram &amp; Abeeha Noor
+ * @author Tooba Akram and Abeeha Noor
  * @version 1.0
  */
 public class ActivityLog {
