@@ -226,7 +226,7 @@ public class ReportShots {
         SwingUtilities.invokeAndWait(() -> {
             frame.showPage(Sidebar.ADD_ITEM);
             List<JTextField> fields = new ArrayList<>();
-            collectText(frame, fields);
+            addItemFields().forEach(fields::add);
             if (fields.size() >= 2) {
                 fields.get(0).setText("Wireless Keyboard");
                 fields.get(1).setText("8");
@@ -242,7 +242,7 @@ public class ReportShots {
         SwingUtilities.invokeAndWait(() -> {
             frame.showPage(Sidebar.ADD_ITEM);
             List<JTextField> fields = new ArrayList<>();
-            collectText(frame, fields);
+            addItemFields().forEach(fields::add);
             for (JTextField f : fields) f.setText("");
             JButton save = findButton(frame, "Save Product");
             if (save != null) save.doClick();
@@ -277,7 +277,7 @@ public class ReportShots {
         SwingUtilities.invokeAndWait(() -> {
             frame.showPage(Sidebar.ADD_ITEM);
             List<JTextField> fields = new ArrayList<>();
-            collectText(frame, fields);
+            addItemFields().forEach(fields::add);
             if (fields.size() >= 2) {
                 fields.get(0).setText("Photo Frame Oak");
                 fields.get(1).setText("14");
@@ -406,6 +406,19 @@ public class ReportShots {
         // restore data file for future runs
         Files.copy(backup, csv, StandardCopyOption.REPLACE_EXISTING);
         Files.deleteIfExists(backup);
+    }
+
+    /** Editable text fields inside the AddItemPanel only (hidden pages
+     *  like the inventory search box must not be touched). */
+    private static List<JTextField> addItemFields() {
+        List<JTextField> fields = new ArrayList<>();
+        for (Component c : allComponents(frame)) {
+            if (c instanceof AddItemPanel panel) {
+                collectText(panel, fields);
+                break;
+            }
+        }
+        return fields;
     }
 
     private static void collectText(Container root, List<JTextField> out) {
