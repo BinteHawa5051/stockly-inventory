@@ -1,0 +1,193 @@
+=== git status ===
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	docs/git_evidence.txt
+	screenshots/IDE screenshot.png
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+=== git log --oneline ===
+afbcbb5 docs: regenerate Javadoc HTML
+f67cf8f docs: complete Javadoc tags
+78377d1 chore: remove dead code (IconHolder, IconButton) and stray files
+d6b7b66 chore: remove stray root-level screenshot files
+af984d3 docs: update test report with TC-20-22 and headed UITest results
+746c879 docs: update README for new features, files, tests and screenshot set
+f7e3c4d fix: scope add-item field lookup to AddItemPanel; recapture all 17 report screenshots
+c4b9425 test: full slow screenshot pass — 17 states covering every page, dialog and interaction
+8730b19 test: report screenshot set (11 states) + ReportShots capture utility
+f2c5f81 fix: donut chart rebuilt as fixed 140px ring + real legend component, 32px gap, centred layout
+d1f2ead fix: donut legend measured and right-anchored; donut shrinks to guarantee gap — no overlap
+57df5db test: add headed UI test covering navigation, CRUD dialogs, search/filter/sort, settings, empty state
+129dec0 fix: needs-restock rows — clean single-line layout, no overlapping panels
+7dd94b5 fix: dashboard layout — equal KPI cards, donut segments+legend, status-colored bars, restock list, activity alignment, thin scrollbars
+ab01327 fix: table chrome, status pills, unified toolbar, vector row icons, sidebar logo, working bell
+9f00ec3 fix: primary and ghost buttons had zero width (preferredSize 0) making them invisible
+0d0d841 fix: add-item page collapsed to zero height due to preferredSize(560,0)
+e03f056 feat: optional manual stock-status override, unified search, restyled add-item page, robust CSV parsing
+5084a4e fix: top-bar search passed query as event source not command; add live stock-status preview to product forms
+e3e03bd chore: ignore local agent config directory
+dbd82d5 test: headless self-test, screenshots, Javadoc and project docs
+f63a007 chore: track generated docs and screenshots in repository
+5e8134c feat: dashboard, inventory, analytics and settings UI with custom charts
+0630a02 feat: product model and inventory manager with validation and CSV persistence
+78d8aaa chore: project scaffold, design theme and reusable UI components
+
+=== git diff HEAD~1 HEAD --stat ===
+ docs/javadoc/allclasses-index.html                 | 106 +++++--
+ docs/javadoc/allpackages-index.html                |   4 +-
+ docs/javadoc/constant-values.html                  |   8 +-
+ docs/javadoc/help-doc.html                         |   4 +-
+ docs/javadoc/index-all.html                        | 320 ++++++++++++++++++---
+ docs/javadoc/index.html                            |   4 +-
+ docs/javadoc/member-search-index.js                |   2 +-
+ docs/javadoc/overview-summary.html                 |   4 +-
+ docs/javadoc/overview-tree.html                    |  55 +++-
+ docs/javadoc/search.html                           |   4 +-
+ docs/javadoc/serialized-form.html                  | 218 +++++++++-----
+ docs/javadoc/stockly/Main.html                     |   8 +-
+ docs/javadoc/stockly/model/ActivityEntry.Kind.html |   8 +-
+ docs/javadoc/stockly/model/ActivityEntry.html      |   8 +-
+ docs/javadoc/stockly/model/ActivityLog.html        |   8 +-
+ docs/javadoc/stockly/model/AppConfig.html          | 259 +++++++++++++++++
+ .../model/InventoryManager.InventoryException.html |   6 +-
+ .../model/InventoryManager.InventoryListener.html  |   8 +-
+ docs/javadoc/stockly/model/InventoryManager.html   | 176 ++++++++++--
+ docs/javadoc/stockly/model/Product.html            |  91 ++++--
+ docs/javadoc/stockly/model/StockStatus.html        |   8 +-
+ docs/javadoc/stockly/model/package-summary.html    |  26 +-
+ docs/javadoc/stockly/model/package-tree.html       |   5 +-
+ docs/javadoc/stockly/package-summary.html          |   4 +-
+ docs/javadoc/stockly/package-tree.html             |   4 +-
+ docs/javadoc/stockly/test/ReportShots.html         | 184 ++++++++++++
+ docs/javadoc/stockly/test/Screenshot.html          |   8 +-
+ docs/javadoc/stockly/test/SelfTest.html            |   8 +-
+ docs/javadoc/stockly/test/UITest.html              | 181 ++++++++++++
+ docs/javadoc/stockly/test/package-summary.html     |  19 +-
+ docs/javadoc/stockly/test/package-tree.html        |   6 +-
+ docs/javadoc/stockly/ui/AddItemPanel.html          |  18 +-
+ docs/javadoc/stockly/ui/AnalyticsPanel.html        |  14 +-
+ docs/javadoc/stockly/ui/DashboardPanel.html        |  30 +-
+ docs/javadoc/stockly/ui/Dialogs.html               | 243 ++++++++++++++++
+ docs/javadoc/stockly/ui/Icon.html                  |   8 +-
+ .../stockly/ui/InventoryPanel.ProductActions.html  |  25 +-
+ docs/javadoc/stockly/ui/InventoryPanel.html        |  48 +++-
+ docs/javadoc/stockly/ui/MainFrame.html             |  13 +-
+ docs/javadoc/stockly/ui/ProductDetailsDialog.html  | 224 +++++++++++++++
+ docs/javadoc/stockly/ui/ProductDialog.html         |   6 +-
+ docs/javadoc/stockly/ui/PromptField.html           | 266 +++++++++++++++++
+ docs/javadoc/stockly/ui/ScrollBarKit.html          | 147 ++++++++++
+ docs/javadoc/stockly/ui/SettingsPanel.html         |  37 ++-
+ docs/javadoc/stockly/ui/Sidebar.html               |   6 +-
+ .../stockly/ui/TableKit.ActionCellRenderer.html    | 196 +++++++++++++
+ .../stockly/ui/TableKit.ProductStatusShim.html     | 256 +++++++++++++++++
+ ...IconButton.html => TableKit.RowIconButton.html} |  41 +--
+ ...TopBar.IconPad.html => TableKit.SearchBox.html} |  90 +++++-
+ .../stockly/ui/TableKit.StatusCellRenderer.html    | 195 +++++++++++++
+ ...r.SearchField.html => TableKit.StatusPill.html} |  85 +++++-
+ .../javadoc/stockly/ui/TableKit.StyledComboUI.html | 248 ++++++++++++++++
+ docs/javadoc/stockly/ui/TableKit.html              | 294 +++++++++++++++++++
+ docs/javadoc/stockly/ui/Theme.html                 |   8 +-
+ docs/javadoc/stockly/ui/TopBar.html                |  67 +----
+ docs/javadoc/stockly/ui/UIComponents.Caption.html  |   6 +-
+ docs/javadoc/stockly/ui/UIComponents.Card.html     |   6 +-
+ .../stockly/ui/UIComponents.GhostButton.html       |  28 +-
+ .../stockly/ui/UIComponents.PrimaryButton.html     |  28 +-
+ .../stockly/ui/UIComponents.SectionTitle.html      |   6 +-
+ .../stockly/ui/UIComponents.StatusBadge.html       |   6 +-
+ docs/javadoc/stockly/ui/UIComponents.html          |  23 +-
+ docs/javadoc/stockly/ui/charts/DonutChart.html     |  44 ++-
+ .../stockly/ui/charts/QuantityBarChart.html        |   6 +-
+ .../javadoc/stockly/ui/charts/package-summary.html |   4 +-
+ docs/javadoc/stockly/ui/charts/package-tree.html   |   4 +-
+ docs/javadoc/stockly/ui/package-summary.html       | 103 ++++---
+ docs/javadoc/stockly/ui/package-tree.html          |  52 +++-
+ docs/javadoc/type-search-index.js                  |   2 +-
+ sources.txt                                        |   1 +
+ 70 files changed, 4133 insertions(+), 505 deletions(-)
+
+=== git diff HEAD~3 HEAD~2 ===
+diff --git a/src/stockly/ui/Sidebar.java b/src/stockly/ui/Sidebar.java
+index 0d71ee9..b641aa9 100644
+--- a/src/stockly/ui/Sidebar.java
++++ b/src/stockly/ui/Sidebar.java
+@@ -254,23 +254,4 @@ public class Sidebar extends JPanel {
+         }
+     }
+ 
+-    /** Tiny helper panel hosting a single icon, used by the brand mark. */
+-    private static class IconHolder extends JPanel {
+-        private final String name;
+-        private final Color color;
+-
+-        IconHolder(String name, Color color) {
+-            this.name = name;
+-            this.color = color;
+-            setOpaque(false);
+-        }
+-
+-        @Override
+-        protected void paintComponent(Graphics g) {
+-            Graphics2D g2 = (Graphics2D) g.create();
+-            Icon.draw(g2, name, 8, 8, 20, color);
+-            g2.dispose();
+-            super.paintComponent(g);
+-        }
+-    }
+ }
+diff --git a/src/stockly/ui/UIComponents.java b/src/stockly/ui/UIComponents.java
+index bf1f4b1..fce929c 100644
+--- a/src/stockly/ui/UIComponents.java
++++ b/src/stockly/ui/UIComponents.java
+@@ -145,48 +145,6 @@ public final class UIComponents {
+         }
+     }
+ 
+-    /**
+-     * Small square icon button used for row actions (edit, delete).
+-     */
+-    public static class IconButton extends JButton {
+-        private final String iconName;
+-        private Color iconColor = Theme.TEXT_MUTED;
+-
+-        public IconButton(String iconName) {
+-            super();
+-            this.iconName = iconName;
+-            setPreferredSize(new Dimension(30, 30));
+-            setMaximumSize(new Dimension(30, 30));
+-            setFocusPainted(false);
+-            setContentAreaFilled(false);
+-            setBorderPainted(false);
+-            setOpaque(false);
+-            setCursor(new Cursor(Cursor.HAND_CURSOR));
+-            addMouseListener(new MouseAdapter() {
+-                @Override public void mouseEntered(MouseEvent e) { repaint(); }
+-                @Override public void mouseExited(MouseEvent e) { repaint(); }
+-            });
+-        }
+-
+-        public void setIconColor(Color color) {
+-            this.iconColor = color;
+-            repaint();
+-        }
+-
+-        @Override
+-        protected void paintComponent(Graphics g) {
+-            Graphics2D g2 = (Graphics2D) g.create();
+-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+-            if (getModel().isRollover()) {
+-                g2.setColor(Theme.HOVER);
+-                g2.fill(new RoundRectangle2D.Float(2, 2, getWidth() - 4, getHeight() - 4, 7, 7));
+-            }
+-            Icon.draw(g2, iconName, 5, 5, getWidth() - 10, iconColor);
+-            g2.dispose();
+-            super.paintComponent(g);
+-        }
+-    }
+-
+     /**
+      * Pill-shaped status badge showing the stock status.
+      */
