@@ -39,7 +39,7 @@ import java.util.Map;
  * overview card, a restock-alerts list and the session activity feed.
  * Call {@link #refresh()} after any inventory change.
  *
- * @author Stockly Team
+ * @author Tooba Akram & Abeeha Noor
  * @version 1.0
  */
 public class DashboardPanel extends JPanel {

@@ -19,7 +19,7 @@ import java.util.List;
  *   java -cp classes stockly.test.SelfTest
  * </pre>
  *
- * @author Stockly Team
+ * @author Tooba Akram & Abeeha Noor
  * @version 1.0
  */
 public final class SelfTest {

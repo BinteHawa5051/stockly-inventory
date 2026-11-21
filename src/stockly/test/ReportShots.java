@@ -28,7 +28,7 @@ import java.util.List;
  * notification, needs-attention filter and the empty-inventory state.
  * Output: {@code screenshots/NN_name.png}.
  *
- * @author Stockly Team
+ * @author Tooba Akram & Abeeha Noor
  * @version 1.0
  */
 public class ReportShots {

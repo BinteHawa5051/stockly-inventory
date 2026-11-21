@@ -34,7 +34,7 @@ import java.util.Map;
  * the exact centre point inside the ring hole. Hovering a segment
  * shows a tooltip.
  *
- * @author Stockly Team
+ * @author Tooba Akram & Abeeha Noor
  * @version 1.0
  */
 public class DonutChart extends JPanel {

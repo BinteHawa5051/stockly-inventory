@@ -9,7 +9,7 @@ import java.awt.Color;
  * (see {@link Product#getStockStatus()}); it can never be set manually,
  * which guarantees the displayed status always matches reality.
  *
- * @author Stockly Team
+ * @author Tooba Akram & Abeeha Noor
  * @version 1.0
  */
 public enum StockStatus {

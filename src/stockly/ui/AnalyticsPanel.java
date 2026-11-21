@@ -35,7 +35,7 @@ import java.util.Map;
  * auto-calculated insight cards. Everything is computed live from the
  * inventory — no fabricated trends.
  *
- * @author Stockly Team
+ * @author Tooba Akram & Abeeha Noor
  * @version 1.0
  */
 public class AnalyticsPanel extends JPanel {

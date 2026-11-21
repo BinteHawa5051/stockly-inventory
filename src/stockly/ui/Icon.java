@@ -18,7 +18,7 @@ import java.awt.geom.RoundRectangle2D;
  * emoji required. Call {@link #draw(Graphics2D, String, int, int, int, Color)}
  * with one of the supported names.
  *
- * @author Stockly Team
+ * @author Tooba Akram & Abeeha Noor
  * @version 1.0
  */
 public final class Icon {

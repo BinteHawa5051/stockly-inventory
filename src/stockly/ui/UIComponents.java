@@ -24,7 +24,7 @@ import java.awt.geom.RoundRectangle2D;
  * Stockly visual language: rounded cards, flat forest buttons, soft
  * hover states and pill-shaped status badges.
  *
- * @author Stockly Team
+ * @author Tooba Akram & Abeeha Noor
  * @version 1.0
  */
 public final class UIComponents {

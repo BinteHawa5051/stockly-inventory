@@ -26,7 +26,7 @@ import java.awt.RenderingHints;
  * Opened from the inventory table's view action. Shows every stored
  * attribute of a product plus buttons to edit or close.
  *
- * @author Stockly Team
+ * @author Tooba Akram & Abeeha Noor
  * @version 1.0
  */
 public class ProductDetailsDialog extends javax.swing.JDialog {

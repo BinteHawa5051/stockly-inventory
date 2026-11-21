@@ -45,7 +45,7 @@ import java.util.List;
  * through {@link InventoryManager}; this panel only renders state and
  * forwards user intent.
  *
- * @author Stockly Team
+ * @author Tooba Akram & Abeeha Noor
  * @version 1.0
  */
 public class InventoryPanel extends JPanel {
