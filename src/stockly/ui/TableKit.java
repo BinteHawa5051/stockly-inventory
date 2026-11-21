@@ -38,7 +38,7 @@ import java.awt.event.MouseEvent;
  *       centred text and status-appropriate pastel colours.</li>
  *   <li>{@link StatusCellRenderer} — table-cell renderer producing a
  *       correctly sized {@link StatusPill}.</li>
- *   <li>{@link ActionCell} — row action buttons (view / edit / delete)
+ *   <li>{@link ActionCellRenderer} — row action buttons (view / edit / delete)
  *       drawn with the vector {@link Icon} set.</li>
  *   <li>{@link StyledComboUI} — combo box with a custom-drawn arrow that
  *       matches the text-field styling.</li>
@@ -353,7 +353,6 @@ public final class TableKit {
          * Creates the search box.
          *
          * @param placeholder hint text shown while empty (may be null)
-         * @return the text field so callers can attach listeners
          */
         public SearchBox(String placeholder) {
             this.placeholder = placeholder;

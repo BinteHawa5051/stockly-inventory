@@ -96,7 +96,13 @@ public final class Dialogs {
         holder[0].setVisible(true);
     }
 
-    /** Error notification (rose icon). */
+    /**
+     * Error notification (rose icon).
+     *
+     * @param owner   parent window for modality and centering
+     * @param title   dialog title
+     * @param message body text shown to the user
+     */
     public static void error(Window owner, String title, String message) {
         notice(owner, title, message, Icon.CLOSE, Theme.CHART_OUT_STOCK);
     }
