@@ -29,20 +29,35 @@ public final class Icon {
 
     /** Supported icon names. */
     public static final String DASHBOARD = "dashboard";
+    /** Icon name for the inventory overview page. */
     public static final String INVENTORY = "inventory";
+    /** Icon name for the add-new-item action. */
     public static final String ADD = "add";
+    /** Icon name for the analytics page. */
     public static final String ANALYTICS = "analytics";
+    /** Icon name for the settings page. */
     public static final String SETTINGS = "settings";
+    /** Icon name for the search field's magnifier. */
     public static final String SEARCH = "search";
+    /** Icon name for the notification bell. */
     public static final String BELL = "bell";
+    /** Icon name for package/box imagery. */
     public static final String BOX = "box";
+    /** Icon name for warning states (low/out of stock). */
     public static final String WARN = "warn";
+    /** Icon name for the delete action. */
     public static final String TRASH = "trash";
+    /** Icon name for the edit action. */
     public static final String EDIT = "edit";
+    /** Icon name for success/confirm actions. */
     public static final String CHECK = "check";
+    /** Icon name for close/cancel actions. */
     public static final String CLOSE = "close";
+    /** Icon name for the view-details action. */
     public static final String EYE = "eye";
+    /** Icon name for sort indicators. */
     public static final String SORT = "sort";
+    /** Icon name for the STOCKLY brand mark. */
     public static final String LOGO = "logo";
 
     /**

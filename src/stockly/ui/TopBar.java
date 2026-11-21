@@ -25,7 +25,9 @@ import java.time.format.DateTimeFormatter;
  */
 public class TopBar extends JPanel {
 
+    /** Bold page heading label. */
     private final JLabel title = new JLabel(" ");
+    /** Muted supporting subtitle label. */
     private final JLabel subtitle = new JLabel(" ");
 
     /**
@@ -56,7 +58,12 @@ public class TopBar extends JPanel {
         add(right, BorderLayout.EAST);
     }
 
-    /** Updates the title and contextual subtitle for the visible page. */
+    /**
+     * Updates the title and contextual subtitle for the visible page.
+     *
+     * @param titleText    main page heading shown in bold
+     * @param subtitleText muted supporting line under the heading
+     */
     public void setPage(String titleText, String subtitleText) {
         title.setText(titleText);
         subtitle.setText(subtitleText);

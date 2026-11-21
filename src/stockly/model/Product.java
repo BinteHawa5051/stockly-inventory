@@ -40,7 +40,11 @@ public class Product {
         this.quantity = quantity;
     }
 
-    /** @return the unique product identifier */
+    /**
+     * Returns the unique identifier of this product.
+     *
+     * @return the unique product identifier
+     */
     public String getId() {
         return id;
     }
@@ -54,7 +58,11 @@ public class Product {
         this.id = id;
     }
 
-    /** @return the product name */
+    /**
+     * Returns the human readable name of this product.
+     *
+     * @return the product name
+     */
     public String getName() {
         return name;
     }
@@ -68,7 +76,11 @@ public class Product {
         this.name = name;
     }
 
-    /** @return the current stock quantity */
+    /**
+     * Returns the number of units currently in stock.
+     *
+     * @return the current stock quantity
+     */
     public int getQuantity() {
         return quantity;
     }

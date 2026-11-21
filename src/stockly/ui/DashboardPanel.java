@@ -44,14 +44,23 @@ import java.util.Map;
  */
 public class DashboardPanel extends JPanel {
 
+    /** Shared inventory data source. */
     private final InventoryManager manager;
+    /** Donut chart of stock-status distribution. */
     private final DonutChart donut = new DonutChart();
+    /** Per-product quantity bar chart. */
     private final QuantityBarChart bars = new QuantityBarChart();
+    /** Vertical box holding the recent-activity rows. */
     private final JPanel activityList = new JPanel();
+    /** The four KPI cards (total products, units, low stock, out of stock). */
     private final StatCard[] statCards = new StatCard[4];
+    /** Stock-health overview card. */
     private final OverviewCard overview = new OverviewCard();
+    /** Restock-alerts card listing products needing attention. */
     private final LowStockCard alerts;
+    /** Callback receiving a product id to open the quick-edit dialog. */
     private final java.util.function.Consumer<String> onEditProduct;
+    /** Callback opening the filtered "needs attention" inventory view. */
     private final Runnable onViewAll;
 
     /**

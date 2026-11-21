@@ -24,12 +24,22 @@ import java.util.List;
  */
 public final class SelfTest {
 
+    /** Pass counter printed in the final summary. */
     private static int passed = 0;
+    /** Fail counter printed in the final summary. */
     private static int failed = 0;
 
+    /** Utility class — all state is static. */
     private SelfTest() {
     }
 
+    /**
+     * Entry point: runs every test case against a temporary inventory
+     * file, prints PASS/FAIL per case and exits non-zero on failure.
+     *
+     * @param args command line arguments (unused)
+     * @throws Exception when file setup fails
+     */
     public static void main(String[] args) throws Exception {
         Path temp = Files.createTempDirectory("stockly-test");
         InventoryManager m = new InventoryManager(temp.resolve("inv.csv"));

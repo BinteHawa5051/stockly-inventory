@@ -109,7 +109,13 @@ public class ProductDetailsDialog extends javax.swing.JDialog {
         gbc.gridwidth = 1;
     }
 
-    /** Convenience: shows the dialog modally. */
+    /**
+     * Convenience: shows the dialog modally.
+     *
+     * @param owner   parent window used for modality and centering
+     * @param manager shared inventory data source used to look up the product
+     * @param id      id of the product whose details are shown
+     */
     public static void show(java.awt.Window owner, InventoryManager manager, String id) {
         new ProductDetailsDialog(owner, manager, id).setVisible(true);
     }

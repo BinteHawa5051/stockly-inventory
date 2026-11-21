@@ -41,17 +41,29 @@ public class ActivityEntry {
         this.timestamp = LocalDateTime.now();
     }
 
-    /** @return the activity category */
+    /**
+     * Returns the category this entry belongs to.
+     *
+     * @return the activity category
+     */
     public Kind getKind() {
         return kind;
     }
 
-    /** @return human readable description of the event */
+    /**
+     * Returns the human readable description of what happened.
+     *
+     * @return human readable description of the event
+     */
     public String getDescription() {
         return description;
     }
 
-    /** @return when the event occurred */
+    /**
+     * Returns the moment this event was recorded.
+     *
+     * @return when the event occurred
+     */
     public LocalDateTime getTimestamp() {
         return timestamp;
     }

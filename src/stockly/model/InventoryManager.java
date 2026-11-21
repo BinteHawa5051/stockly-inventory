@@ -31,7 +31,11 @@ public class InventoryManager {
 
     /** Raised when validation fails or an id cannot be resolved. */
     public static class InventoryException extends Exception {
-        /** @param message user friendly description of the problem */
+        /**
+         * Creates an exception describing a failed inventory operation.
+         *
+         * @param message user friendly description of the problem
+         */
         public InventoryException(String message) {
             super(message);
         }
@@ -130,12 +134,20 @@ public class InventoryManager {
         return null;
     }
 
-    /** @return number of products in the inventory */
+    /**
+     * Returns how many products the inventory currently holds.
+     *
+     * @return number of products in the inventory
+     */
     public int productCount() {
         return products.size();
     }
 
-    /** @return total stock quantity across all products */
+    /**
+     * Sums the stock quantity of every product.
+     *
+     * @return total stock quantity across all products
+     */
     public int totalUnits() {
         int total = 0;
         for (Product p : products) {
@@ -353,7 +365,12 @@ public class InventoryManager {
         notifyChanged();
     }
 
-    /** @return products sorted by quantity ascending (lowest stock first) */
+    /**
+     * Returns every product ordered by ascending quantity, so the
+     * scarcest items appear first — used by the "needs attention" view.
+     *
+     * @return products sorted by quantity ascending (lowest stock first)
+     */
     public List<Product> getProductsNeedingAttention() {
         List<Product> list = new ArrayList<>(products);
         list.sort(Comparator.comparingInt(Product::getQuantity));

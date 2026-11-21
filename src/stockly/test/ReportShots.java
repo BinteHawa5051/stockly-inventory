@@ -33,8 +33,15 @@ import java.util.List;
  */
 public class ReportShots {
 
+    /** Utility class — all state is static. */
+    private ReportShots() {
+    }
+
+    /** Pixel-capture robot used for every screenshot. */
     private static final Robot ROBOT;
+    /** The real {@link MainFrame} under test. */
     private static MainFrame frame;
+    /** Inventory backing the frame; backed by {@code inventory.csv}. */
     private static InventoryManager manager;
 
     static {
@@ -46,6 +53,14 @@ public class ReportShots {
         }
     }
 
+    /**
+     * Entry point: launches the real {@link MainFrame}, walks every
+     * screen and interaction, and writes PNG captures to
+     * {@code screenshots/}.
+     *
+     * @param args command line arguments (unused)
+     * @throws Exception when screen capture or file output fails
+     */
     public static void main(String[] args) throws Exception {
         Path out = Paths.get("screenshots");
         Files.createDirectories(out);

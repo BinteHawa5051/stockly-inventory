@@ -30,14 +30,20 @@ import java.util.Map;
  */
 public class Sidebar extends JPanel {
 
-    /** Page identifiers used with the card layout. */
+    /** Page identifier for the dashboard destination. */
     public static final String DASHBOARD = "dashboard";
+    /** Page identifier for the inventory table destination. */
     public static final String INVENTORY = "inventory";
+    /** Page identifier for the add-new-item form destination. */
     public static final String ADD_ITEM = "addItem";
+    /** Page identifier for the analytics destination. */
     public static final String ANALYTICS = "analytics";
+    /** Page identifier for the settings destination. */
     public static final String SETTINGS = "settings";
 
+    /** Navigation buttons keyed by page id. */
     private final Map<String, NavButton> buttons = new LinkedHashMap<>();
+    /** Id of the currently active page. */
     private String active = DASHBOARD;
 
     /**
@@ -172,13 +178,21 @@ public class Sidebar extends JPanel {
         return footer;
     }
 
-    /** Highlights the given page id and dims the rest. */
+    /**
+     * Highlights the given page id and dims the rest.
+     *
+     * @param id page id to activate (one of the {@code *} constants)
+     */
     public void setActive(String id) {
         active = id;
         buttons.values().forEach(b -> b.setActive(b.id.equals(id)));
     }
 
-    /** @return id of the currently active page */
+    /**
+     * Returns the id of the page currently shown as active.
+     *
+     * @return id of the currently active page
+     */
     public String getActive() {
         return active;
     }

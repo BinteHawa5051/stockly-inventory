@@ -31,8 +31,22 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class UITest {
 
-    private static int passed, failed;
+    /** Pass counter printed in the final summary. */
+    private static int passed;
+    /** Fail counter printed in the final summary. */
+    private static int failed;
 
+    /** Utility class — all state is static. */
+    private UITest() {
+    }
+
+    /**
+     * Entry point: builds the real {@link MainFrame} off-screen and runs
+     * every UI verification case, exiting non-zero on failure.
+     *
+     * @param args command line arguments (unused)
+     * @throws Exception when UI setup fails
+     */
     public static void main(String[] args) throws Exception {
         Path dir = Files.createTempDirectory("stockly-ui");
         InventoryManager m = new InventoryManager(dir.resolve("inv.csv"));

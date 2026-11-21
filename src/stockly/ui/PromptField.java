@@ -23,6 +23,7 @@ import java.awt.RenderingHints;
  */
 public class PromptField extends JTextField {
 
+    /** Hint text painted while the field is empty. */
     private final String prompt;
 
     /**

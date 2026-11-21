@@ -35,14 +35,22 @@ import java.awt.event.WindowEvent;
  */
 public class ProductDialog extends JDialog {
 
+    /** Shared inventory data source. */
     private final InventoryManager manager;
+    /** Id of the product being edited; {@code null} means add mode. */
     private final String editingId; // null → add mode
+    /** Product name input. */
     private final PromptField nameField = new PromptField("e.g. Ceramic Mug");
+    /** Quantity input. */
     private final PromptField qtyField = new PromptField("e.g. 12");
+    /** Stock-status combo: auto-derive or pin a manual status. */
     private final javax.swing.JComboBox<String> statusBox = new javax.swing.JComboBox<>(
             new String[]{"Auto (from quantity)", "In Stock", "Low Stock", "Out of Stock"});
+    /** Label showing the status that will actually be saved. */
     private final JLabel statusPreview = new JLabel(" ");
+    /** Inline validation error message. */
     private final JLabel errorLabel = new JLabel(" ");
+    /** Whether the dialog was closed by a successful save. */
     private boolean saved;
 
     /**
@@ -292,12 +300,22 @@ public class ProductDialog extends JDialog {
         }
     }
 
-    /** @return {@code true} when the user saved successfully */
+    /**
+     * Returns whether the user saved the product before closing.
+     *
+     * @return {@code true} when the user saved successfully
+     */
     public boolean wasSaved() {
         return saved;
     }
 
-    /** Convenience: shows the dialog modally for add or edit. */
+    /**
+     * Convenience: shows the dialog modally for add or edit.
+     *
+     * @param owner     parent window used for modality and centering
+     * @param manager   shared inventory data source
+     * @param editingId id of the product being edited, or {@code null} to add
+     */
     public static void show(java.awt.Window owner, InventoryManager manager, String editingId) {
         ProductDialog d = new ProductDialog(owner, manager, editingId);
         d.setVisible(true);

@@ -28,8 +28,11 @@ import java.util.List;
  */
 public class QuantityBarChart extends JPanel {
 
+    /** Products to display, in display order. */
     private List<Product> products = List.of();
+    /** Largest quantity, used to scale bar lengths. */
     private int maxQuantity = 1;
+    /** Dark tooltip label shown on row hover. */
     private final JLabel tip = new JLabel();
 
     /** Creates an empty chart; call {@link #setData(List)} to populate. */

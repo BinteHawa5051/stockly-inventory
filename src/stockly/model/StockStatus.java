@@ -31,12 +31,20 @@ public enum StockStatus {
         this.color = color;
     }
 
-    /** @return short human readable label for badges and legends */
+    /**
+     * Returns the short label shown on badges and chart legends.
+     *
+     * @return short human readable label for badges and legends
+     */
     public String getLabel() {
         return label;
     }
 
-    /** @return the accent color used for badges, charts and indicators */
+    /**
+     * Returns the accent colour associated with this status.
+     *
+     * @return the accent color used for badges, charts and indicators
+     */
     public Color getColor() {
         return color;
     }

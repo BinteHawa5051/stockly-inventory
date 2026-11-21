@@ -48,9 +48,11 @@ public final class Theme {
     /** Active navigation tint. */
     public static final Color ACTIVE_BG = new Color(0xE4EADF);
 
-    /** Chart colors for inventory distribution. */
+    /** Chart colours for the in-stock segment. */
     public static final Color CHART_IN_STOCK = new Color(0x7C9478);
+    /** Chart colour for the low-stock segment. */
     public static final Color CHART_LOW_STOCK = new Color(0xD9A05B);
+    /** Chart colour for the out-of-stock segment. */
     public static final Color CHART_OUT_STOCK = new Color(0xC96A63);
 
     /** Coordinated pastel palette used for per-product bars. */
@@ -65,12 +67,22 @@ public final class Theme {
     /** Base UI font family — Segoe UI on Windows, falls back gracefully. */
     public static final String FONT_FAMILY = "Segoe UI";
 
-    /** @return regular UI font at the given size */
+    /**
+     * Returns the regular-weight UI font at the requested size.
+     *
+     * @param size font size in points
+     * @return regular UI font at the given size
+     */
     public static Font font(int size) {
         return new Font(FONT_FAMILY, Font.PLAIN, size);
     }
 
-    /** @return bold UI font at the given size */
+    /**
+     * Returns the bold-weight UI font at the requested size.
+     *
+     * @param size font size in points
+     * @return bold UI font at the given size
+     */
     public static Font bold(int size) {
         return new Font(FONT_FAMILY, Font.BOLD, size);
     }

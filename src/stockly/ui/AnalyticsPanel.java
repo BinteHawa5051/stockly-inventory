@@ -40,12 +40,19 @@ import java.util.Map;
  */
 public class AnalyticsPanel extends JPanel {
 
+    /** Shared inventory data source. */
     private final InventoryManager manager;
+    /** Donut chart of stock-status distribution. */
     private final DonutChart donut = new DonutChart();
+    /** Per-product quantity bar chart. */
     private final QuantityBarChart bars = new QuantityBarChart();
+    /** Table model backing the status-breakdown rows. */
     private final DefaultTableModel breakdownModel;
+    /** The status-breakdown table. */
     private final JTable breakdownTable;
+    /** The four KPI value labels. */
     private final JLabel[] kpiValues = new JLabel[4];
+    /** Vertical box holding the insight cards. */
     private final JPanel insightsPanel = new JPanel();
 
     /**

@@ -115,9 +115,16 @@ public final class TableKit {
      * wide enough for the text plus padding.
      */
     public static class StatusPill extends JPanel {
+        /** The stock status this pill displays. */
         private final StockStatus status;
+        /** Centred label showing the status text. */
         private final JLabel label = new JLabel();
 
+        /**
+         * Creates a pill showing the given status's label and colours.
+         *
+         * @param status the stock status to display
+         */
         public StatusPill(StockStatus status) {
             this.status = status;
             setOpaque(false);
@@ -157,6 +164,7 @@ public final class TableKit {
     public static class StatusCellRenderer implements TableCellRenderer {
         private final JPanel wrap = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 
+        /** Creates a renderer that centres a fresh {@link StatusPill} per cell. */
         public StatusCellRenderer() {
             wrap.setOpaque(true);
         }
@@ -175,7 +183,11 @@ public final class TableKit {
         }
     }
 
-    /** Tiny carrier so the status column can pass the enum through the model. */
+    /**
+     * Tiny carrier so the status column can pass the enum through the model.
+     *
+     * @param status the stock status to render in the cell
+     */
     public record ProductStatusShim(StockStatus status) { }
 
     // ------------------------------------------------------------------
@@ -188,10 +200,18 @@ public final class TableKit {
      * rounded background, delete tinted muted red.
      */
     public static class RowIconButton extends JButton {
+        /** Name of the {@link Icon} constant drawn inside the button. */
         private final String iconName;
+        /** Current icon stroke/fill colour. */
         private Color iconColor = Theme.TEXT_MUTED;
+        /** Whether the mouse is currently over the button. */
         private boolean hover;
 
+        /**
+         * Creates a borderless 30×30 icon button.
+         *
+         * @param iconName one of the {@link Icon} name constants to draw
+         */
         public RowIconButton(String iconName) {
             super();
             this.iconName = iconName;
@@ -210,7 +230,11 @@ public final class TableKit {
             });
         }
 
-        /** Tints the icon (used for the muted-red delete glyph). */
+        /**
+         * Tints the icon (used for the muted-red delete glyph).
+         *
+         * @param color new icon stroke/fill colour
+         */
         public void setIconColor(Color color) {
             this.iconColor = color;
             repaint();
@@ -242,6 +266,7 @@ public final class TableKit {
     public static class ActionCellRenderer implements TableCellRenderer {
         private final JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 2, 0));
 
+        /** Creates a renderer producing the view/edit/delete icon row. */
         public ActionCellRenderer() {
             panel.setOpaque(true);
         }
@@ -276,6 +301,10 @@ public final class TableKit {
      * ivory styling that matches the rounded search field.
      */
     public static class StyledComboUI extends BasicComboBoxUI {
+
+        /** Creates the combo-box UI with the custom arrow and flat styling. */
+        public StyledComboUI() {
+        }
 
         @Override
         protected JButton createArrowButton() {
@@ -346,7 +375,9 @@ public final class TableKit {
      * placeholder text when empty.
      */
     public static class SearchBox extends JPanel {
+        /** Inner editable text field. */
         private final javax.swing.JTextField field;
+        /** Hint text painted while the field is empty. */
         private final String placeholder;
 
         /**
@@ -381,7 +412,11 @@ public final class TableKit {
             add(field, BorderLayout.CENTER);
         }
 
-        /** @return the inner text field */
+        /**
+         * Returns the inner editable text field.
+         *
+         * @return the inner text field
+         */
         public javax.swing.JTextField getField() {
             return field;
         }

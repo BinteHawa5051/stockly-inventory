@@ -30,7 +30,11 @@ public final class AppConfig {
         // utility class
     }
 
-    /** @return quantity at or below which an item counts as low stock */
+    /**
+     * Returns the quantity at or below which a product counts as low stock.
+     *
+     * @return quantity at or below which an item counts as low stock
+     */
     public static int getLowStockThreshold() {
         return lowStockThreshold;
     }
@@ -45,7 +49,11 @@ public final class AppConfig {
         lowStockThreshold = Math.max(0, Math.min(100, threshold));
     }
 
-    /** @return whether deletes should ask for confirmation */
+    /**
+     * Returns whether deleting a product must ask for confirmation first.
+     *
+     * @return whether deletes should ask for confirmation
+     */
     public static boolean isConfirmDelete() {
         return confirmDelete;
     }
@@ -64,7 +72,12 @@ public final class AppConfig {
         load(FILE);
     }
 
-    /** Loads preferences from the given file; missing file keeps defaults. */
+    /**
+     * Loads preferences from the given file; a missing file keeps the
+     * current defaults.
+     *
+     * @param file properties file to read
+     */
     public static void load(Path file) {
         if (!Files.exists(file)) {
             return;
@@ -86,7 +99,11 @@ public final class AppConfig {
         save(FILE);
     }
 
-    /** Saves current preferences to the given file. */
+    /**
+     * Saves current preferences to the given file, overwriting it.
+     *
+     * @param file properties file to write
+     */
     public static void save(Path file) {
         Properties props = new Properties();
         props.setProperty("lowStockThreshold", String.valueOf(lowStockThreshold));

@@ -26,9 +26,17 @@ import java.nio.file.Paths;
  */
 public final class Screenshot {
 
+    /** Utility class — all state is static. */
     private Screenshot() {
     }
 
+    /**
+     * Entry point: opens the real {@link MainFrame}, visits each page
+     * and writes a PNG capture per page to {@code docs/screenshots/}.
+     *
+     * @param args command line arguments (unused)
+     * @throws Exception when screen capture or file output fails
+     */
     public static void main(String[] args) throws Exception {
         Path outDir = Paths.get("docs", "screenshots");
         Files.createDirectories(outDir);

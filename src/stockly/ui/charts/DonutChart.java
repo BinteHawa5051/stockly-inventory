@@ -52,9 +52,13 @@ public class DonutChart extends JPanel {
     /** Angular gap between segments. */
     private static final double GAP = Math.toRadians(3);
 
+    /** Product counts keyed by stock status. */
     private final Map<StockStatus, Integer> counts = new EnumMap<>(StockStatus.class);
+    /** Sum of all segment counts. */
     private int total;
+    /** The painted donut ring panel. */
     private final RingPanel ring = new RingPanel();
+    /** The legend listing each status row. */
     private final LegendPanel legend = new LegendPanel();
 
     /** Creates an empty chart; call {@link #setData(Map)} to populate. */
@@ -302,6 +306,7 @@ public class DonutChart extends JPanel {
     // Tooltip
     // ------------------------------------------------------------------
 
+    /** Dark tooltip label overlaid on the ring. */
     private final JLabel tip = new JLabel();
 
     private void attachTooltip() {

@@ -22,6 +22,12 @@ public class ActivityLog {
     private final List<ActivityEntry> entries = new ArrayList<>();
 
     /**
+     * Creates an empty activity log ready to record session events.
+     */
+    public ActivityLog() {
+    }
+
+    /**
      * Records a new activity entry at the front of the feed.
      *
      * @param kind        the activity category
@@ -45,7 +51,11 @@ public class ActivityLog {
         return Collections.unmodifiableList(entries.subList(0, size));
     }
 
-    /** @return total number of recorded entries */
+    /**
+     * Returns the number of entries currently held in the log.
+     *
+     * @return total number of recorded entries
+     */
     public int size() {
         return entries.size();
     }

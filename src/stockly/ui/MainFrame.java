@@ -29,14 +29,23 @@ import java.nio.file.Paths;
  */
 public class MainFrame extends JFrame {
 
+    /** Shared inventory data source owned by this frame. */
     private final InventoryManager manager;
+    /** Card layout switching between the page panels. */
     private final CardLayout cards = new CardLayout();
+    /** Panel hosting every page, switched via {@link #cards}. */
     private final JPanel content = new JPanel(cards);
+    /** Top navigation bar. */
     private final TopBar topBar;
+    /** Dashboard page instance. */
     private final DashboardPanel dashboard;
+    /** Inventory table page instance. */
     private final InventoryPanel inventory;
+    /** Analytics page instance. */
     private final AnalyticsPanel analytics;
+    /** Settings page instance. */
     private final SettingsPanel settings;
+    /** Sidebar kept so programmatic navigation can update the active item. */
     private final Sidebar sidebarRef;
 
     /**
@@ -121,7 +130,11 @@ public class MainFrame extends JFrame {
         return page;
     }
 
-    /** Switches the visible page programmatically (used by navigation and tests). */
+    /**
+     * Switches the visible page programmatically (used by navigation and tests).
+     *
+     * @param id page id to show (one of the {@link Sidebar} constants)
+     */
     public void showPage(String id) {
         navigateById(id);
     }

@@ -54,11 +54,23 @@ public class InventoryPanel extends JPanel {
     public interface ProductActions {
         /** Open the add-product dialog. */
         void onAdd();
-        /** Open the edit dialog for the given product id. */
+        /**
+         * Open the edit dialog for the given product id.
+         *
+         * @param id id of the product to edit
+         */
         void onEdit(String id);
-        /** Open the details dialog for the given product id. */
+        /**
+         * Open the details dialog for the given product id.
+         *
+         * @param id id of the product to inspect
+         */
         void onView(String id);
-        /** Ask for confirmation then delete the given product id. */
+        /**
+         * Ask for confirmation then delete the given product id.
+         *
+         * @param id id of the product to delete
+         */
         void onDelete(String id);
     }
 
@@ -68,19 +80,30 @@ public class InventoryPanel extends JPanel {
     private static final int W_STATUS = 130;
     private static final int W_ACTIONS = 140;
 
+    /** Shared inventory data source. */
     private final InventoryManager manager;
+    /** Callbacks for add / edit / view / delete product actions. */
     private final ProductActions actions;
+    /** Table model backing the product rows. */
     private final DefaultTableModel model;
+    /** The product table. */
     private final JTable table;
+    /** Overlay shown when no products match the current filters. */
     private final JPanel emptyState;
+    /** KPI value labels in the stats strip (total, in stock, low, out). */
     private final JLabel[] statValues = new JLabel[4];
+    /** Toolbar search field filtering products by name. */
     private final TableKit.SearchBox searchBox = new TableKit.SearchBox("Search products...");
+    /** Status filter combo (all / needs attention / each status). */
     private final JComboBox<String> statusFilter = new JComboBox<>(
             new String[]{"All Statuses", "Needs Attention", "In Stock", "Low Stock", "Out of Stock"});
+    /** Sort-order combo for the table rows. */
     private final JComboBox<String> sortBox = new JComboBox<>(
             new String[]{"Sort: Name A–Z", "Sort: Name Z–A", "Sort: Qty High→Low", "Sort: Qty Low→High"});
+    /** Button resetting search, filter and sort; hidden while inactive. */
     private final UIComponents.GhostButton clearBtn =
             new UIComponents.GhostButton("Clear filters");
+    /** Currently hovered table row index, or {@code -1} when none. */
     private int hoverRow = -1;
 
     /**
@@ -474,6 +497,8 @@ public class InventoryPanel extends JPanel {
     /**
      * Applies a search query — mirrors into the toolbar search box so
      * there is exactly one query source.
+     *
+     * @param text search text to filter products by, or {@code null} to clear
      */
     public void setGlobalSearch(String text) {
         searchBox.getField().setText(text == null ? "" : text);

@@ -37,6 +37,9 @@ public final class Dialogs {
     /**
      * Confirmation dialog with a warning icon and Yes / No buttons.
      *
+     * @param owner   parent window used for modality and centering
+     * @param title   dialog title shown in the window chrome
+     * @param message body text explaining what is being confirmed
      * @return {@code true} when the user confirms
      */
     public static boolean confirm(Window owner, String title, String message) {
@@ -46,6 +49,11 @@ public final class Dialogs {
     /**
      * Confirmation dialog with a custom icon tint.
      *
+     * @param owner   parent window used for modality and centering
+     * @param title   dialog title shown in the window chrome
+     * @param message body text explaining what is being confirmed
+     * @param icon    {@link Icon} name drawn inside the tinted badge
+     * @param tint    badge/icon accent colour
      * @return {@code true} when the user confirms
      */
     public static boolean confirm(Window owner, String title, String message,
@@ -72,6 +80,10 @@ public final class Dialogs {
 
     /**
      * Information / success notification with a single OK button.
+     *
+     * @param owner   parent window used for modality and centering
+     * @param title   dialog title shown in the window chrome
+     * @param message body text shown to the user
      */
     public static void notice(Window owner, String title, String message) {
         notice(owner, title, message, Icon.CHECK, Theme.CHART_IN_STOCK);
@@ -79,6 +91,12 @@ public final class Dialogs {
 
     /**
      * Information dialog with a custom icon tint.
+     *
+     * @param owner   parent window used for modality and centering
+     * @param title   dialog title shown in the window chrome
+     * @param message body text shown to the user
+     * @param icon    {@link Icon} name drawn inside the tinted badge
+     * @param tint    badge/icon accent colour
      */
     public static void notice(Window owner, String title, String message,
                               String icon, Color tint) {

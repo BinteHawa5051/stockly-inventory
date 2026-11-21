@@ -37,6 +37,9 @@ public final class UIComponents {
      * Rounded surface panel used as the base for cards and sections.
      */
     public static class Card extends JPanel {
+        /**
+         * Creates an empty card with a borderless {@link java.awt.BorderLayout}.
+         */
         public Card() {
             setOpaque(false);
             setLayout(new java.awt.BorderLayout());
@@ -60,11 +63,22 @@ public final class UIComponents {
      * Forest-green primary action button with a subtle hover state.
      */
     public static class PrimaryButton extends JButton {
+        /**
+         * Creates a primary button in the default forest-green colour.
+         *
+         * @param text button label
+         */
         public PrimaryButton(String text) {
             super(text);
             style(Theme.FOREST, Theme.SURFACE);
         }
 
+        /**
+         * Creates a primary button with a custom fill colour.
+         *
+         * @param text button label
+         * @param bg   normal-state background colour (darkened on hover/press)
+         */
         public PrimaryButton(String text, Color bg) {
             super(text);
             style(bg, Theme.SURFACE);
@@ -110,6 +124,11 @@ public final class UIComponents {
      * Quiet secondary button with a soft grey fill.
      */
     public static class GhostButton extends JButton {
+        /**
+         * Creates a quiet secondary button with the standard grey fill.
+         *
+         * @param text button label
+         */
         public GhostButton(String text) {
             super(text);
             setFont(Theme.font(13));
@@ -149,8 +168,14 @@ public final class UIComponents {
      * Pill-shaped status badge showing the stock status.
      */
     public static class StatusBadge extends JPanel {
+        /** Centred label inside the pill. */
         private final JLabel label = new JLabel();
 
+        /**
+         * Creates a badge showing the given stock status.
+         *
+         * @param status the stock status whose label and colour to display
+         */
         public StatusBadge(stockly.model.StockStatus status) {
             setOpaque(false);
             setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
@@ -162,13 +187,22 @@ public final class UIComponents {
             update(status.getLabel(), status.getColor());
         }
 
-        /** Refreshes the badge text and color. */
+        /**
+         * Refreshes the badge text and color.
+         *
+         * @param text  new badge label
+         * @param color new badge accent colour
+         */
         public void update(String text, Color color) {
             label.setText(text);
             label.setForeground(color);
         }
 
-        /** @return preferred width that fits the text plus padding */
+        /**
+         * Returns the badge width needed to fit its text plus padding.
+         *
+         * @return preferred width that fits the text plus padding
+         */
         @Override
         public Dimension getPreferredSize() {
             Dimension d = label.getPreferredSize();
@@ -194,6 +228,12 @@ public final class UIComponents {
      * Section heading with optional muted subtitle.
      */
     public static class SectionTitle extends JPanel {
+        /**
+         * Creates a section heading with an optional muted subtitle.
+         *
+         * @param title    main heading text
+         * @param subtitle supporting line below the heading, or {@code null} to omit
+         */
         public SectionTitle(String title, String subtitle) {
             setOpaque(false);
             setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
@@ -219,6 +259,11 @@ public final class UIComponents {
      * Muted helper text label.
      */
     public static class Caption extends JLabel {
+        /**
+         * Creates muted helper text in the small UI font.
+         *
+         * @param text the caption text
+         */
         public Caption(String text) {
             super(text);
             setFont(Theme.font(11));
@@ -226,7 +271,12 @@ public final class UIComponents {
         }
     }
 
-    /** Centers a component horizontally inside its parent width. */
+    /**
+     * Lays the given labels out in a single centred row.
+     *
+     * @param labels the labels to display, in order
+     * @return a transparent panel containing the centred labels
+     */
     public static JPanel centered(JLabel... labels) {
         JPanel p = new JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 8, 0));
         p.setOpaque(false);
@@ -236,7 +286,13 @@ public final class UIComponents {
         return p;
     }
 
-    /** Computes a nice "1.2k" style compact number for big stat values. */
+    /**
+     * Formats a number compactly for big stat values, e.g. {@code 1234}
+     * becomes {@code "1.2k"}.
+     *
+     * @param value the raw count to abbreviate
+     * @return compact "1.2k" style string
+     */
     public static String compact(long value) {
         if (value < 1000) {
             return String.valueOf(value);
@@ -244,7 +300,13 @@ public final class UIComponents {
         return String.format("%.1fk", value / 1000.0).replace(".0k", "k");
     }
 
-    /** Utility: text width in pixels for the UI font. */
+    /**
+     * Measures a string's rendered width in pixels.
+     *
+     * @param text the string to measure
+     * @param font the font to measure with
+     * @return width of {@code text} in pixels under {@code font}
+     */
     public static int textWidth(String text, java.awt.Font font) {
         java.awt.FontMetrics fm = new java.awt.Canvas().getFontMetrics(font);
         return fm.stringWidth(text);

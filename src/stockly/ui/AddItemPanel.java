@@ -40,15 +40,24 @@ public class AddItemPanel extends JPanel {
             "Auto (from quantity)", "In Stock", "Low Stock", "Out of Stock"
     };
 
+    /** Shared inventory data source. */
     private final InventoryManager manager;
+    /** Callback to jump to the inventory page after saving. */
     private final Runnable onSavedToInventory;
+    /** Callback to jump to the dashboard after saving. */
     private final Runnable onSavedToDashboard;
 
+    /** Product name input. */
     private final PromptField nameField = new PromptField("e.g. Ceramic Mug");
+    /** Quantity input. */
     private final PromptField qtyField = new PromptField("e.g. 12");
+    /** Stock-status combo: auto-derive or pin a manual status. */
     private final JComboBox<String> statusBox = new JComboBox<>(STATUS_OPTIONS);
+    /** Label showing the status that will actually be saved. */
     private final JLabel statusPreview = new JLabel(" ");
+    /** Inline validation error message. */
     private final JLabel errorLabel = new JLabel(" ");
+    /** Inline success message. */
     private final JLabel successLabel = new JLabel(" ");
 
     /**
