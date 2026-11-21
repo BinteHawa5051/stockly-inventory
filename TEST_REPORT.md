@@ -54,8 +54,14 @@ TC-18  Product name containing comma survives CSV                 PASS
        actual: name=Stapler, Heavy Duty
 TC-19  Malformed CSV row skipped gracefully                       PASS
        actual: loaded 2 of 3 rows; P002 manual status=LOW_STOCK
+TC-20  Low-stock threshold is configurable                        PASS
+       actual: threshold=10 -> LOW, threshold=5 -> IN for qty 8
+TC-21  CSV export/import round-trip                               PASS
+       actual: exported+imported 9 products
+TC-22  Clear inventory empties the list                           PASS
+       actual: count=0
 
-RESULT: 19 passed, 0 failed
+RESULT: 22 passed, 0 failed
 ```
 
 ## Test case details
@@ -81,13 +87,43 @@ RESULT: 19 passed, 0 failed
 | TC-17 | Status persistence | reload CSV | Manual status survives restart | Reloaded product still OUT_OF_STOCK | PASS |
 | TC-18 | Comma in name | "Stapler, Heavy Duty" | CSV round-trips quoted field | Name intact after reload | PASS |
 | TC-19 | Malformed CSV | file with bad row | Bad row skipped, rest load | 2 of 3 rows loaded; manual status parsed | PASS |
+| TC-20 | Configurable threshold | qty=8, threshold 10→5 | LOW_STOCK then IN_STOCK | Status flips live via `AppConfig` | PASS |
+| TC-21 | CSV export/import | export then import | Same product count | 9 products round-tripped | PASS |
+| TC-22 | Clear inventory | `clearAll()` | Empty list | `productCount()==0` | PASS |
+
+## Headed UI tests (`stockly.test.UITest`)
+
+A second suite builds the real `MainFrame` off-screen and drives actual
+components — forms, table model, combos and modal dialog buttons:
+
+```bash
+java -cp classes stockly.test.UITest
+```
+
+Executed result: **13 passed, 0 failed**
+
+| ID | Scenario | Result |
+|----|----------|--------|
+| U1 | All five pages registered in card layout | PASS |
+| U2 | Sidebar navigation reaches every page | PASS |
+| U3 | Dashboard renders with seeded data | PASS |
+| U5 | Add Item page → Save Product adds product | PASS |
+| U6 | Inventory lists all products by default | PASS |
+| U7 | Search filters rows and restores on clear | PASS |
+| U8 | Status filter shows only matching rows | PASS |
+| U9 | Sort combo reorders table | PASS |
+| U10 | Edit dialog opens and saves changes | PASS |
+| U11 | Delete confirmation removes product | PASS |
+| U12 | Settings threshold changes status live | PASS |
+| U13 | Analytics and Settings render | PASS |
+| U14 | Empty inventory shows empty state | PASS |
 
 ## Manual GUI verification
 
 The application was compiled and launched on the development machine
 (`java -cp classes stockly.Main`). All five pages were rendered and
-captured to `docs/screenshots/` via `stockly.test.Screenshot`. Visual
-checks performed:
+captured to `screenshots/` (17 states) via `stockly.test.ReportShots`.
+Visual checks performed:
 
 - Dashboard cards, donut, bar chart and activity feed render with the
   pastel palette.
