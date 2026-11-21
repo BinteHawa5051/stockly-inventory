@@ -7,12 +7,15 @@ yourself with the commands in each section.
 ## Commit history (expected)
 
 ```
-* <sha>  docs: add README, test report, Javadoc and screenshots
-* <sha>  test: add headless self-test and screenshot utility
-* <sha>  feat: dashboard, inventory, analytics and settings UI
-* <sha>  feat: product model and inventory manager with CSV persistence
-* <sha>  chore: project scaffold, theme and reusable UI components
+* af984d3  docs: update test report with TC-20-22 and headed UITest results
+* 746c879  docs: update README for new features, files, tests and screenshot set
+* dbd82d5  test: headless self-test, screenshots, Javadoc and project docs
+* 5e8134c  feat: dashboard, inventory, analytics and settings UI with custom charts
+* 0630a02  feat: product model and inventory manager with validation and CSV persistence
+* 78d8aaa  chore: project scaffold, design theme and reusable UI components
 ```
+
+(26 commits total on `main` — run `git log --oneline` for the full list.)
 
 ## Useful commands
 
