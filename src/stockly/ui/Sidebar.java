@@ -254,23 +254,4 @@ public class Sidebar extends JPanel {
         }
     }
 
-    /** Tiny helper panel hosting a single icon, used by the brand mark. */
-    private static class IconHolder extends JPanel {
-        private final String name;
-        private final Color color;
-
-        IconHolder(String name, Color color) {
-            this.name = name;
-            this.color = color;
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            Icon.draw(g2, name, 8, 8, 20, color);
-            g2.dispose();
-            super.paintComponent(g);
-        }
-    }
 }

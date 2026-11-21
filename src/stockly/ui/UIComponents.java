@@ -146,48 +146,6 @@ public final class UIComponents {
     }
 
     /**
-     * Small square icon button used for row actions (edit, delete).
-     */
-    public static class IconButton extends JButton {
-        private final String iconName;
-        private Color iconColor = Theme.TEXT_MUTED;
-
-        public IconButton(String iconName) {
-            super();
-            this.iconName = iconName;
-            setPreferredSize(new Dimension(30, 30));
-            setMaximumSize(new Dimension(30, 30));
-            setFocusPainted(false);
-            setContentAreaFilled(false);
-            setBorderPainted(false);
-            setOpaque(false);
-            setCursor(new Cursor(Cursor.HAND_CURSOR));
-            addMouseListener(new MouseAdapter() {
-                @Override public void mouseEntered(MouseEvent e) { repaint(); }
-                @Override public void mouseExited(MouseEvent e) { repaint(); }
-            });
-        }
-
-        public void setIconColor(Color color) {
-            this.iconColor = color;
-            repaint();
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            if (getModel().isRollover()) {
-                g2.setColor(Theme.HOVER);
-                g2.fill(new RoundRectangle2D.Float(2, 2, getWidth() - 4, getHeight() - 4, 7, 7));
-            }
-            Icon.draw(g2, iconName, 5, 5, getWidth() - 10, iconColor);
-            g2.dispose();
-            super.paintComponent(g);
-        }
-    }
-
-    /**
      * Pill-shaped status badge showing the stock status.
      */
     public static class StatusBadge extends JPanel {
