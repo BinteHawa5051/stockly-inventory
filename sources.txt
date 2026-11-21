@@ -5,6 +5,7 @@ src/stockly/model/AppConfig.java
 src/stockly/model/InventoryManager.java
 src/stockly/model/Product.java
 src/stockly/model/StockStatus.java
+src/stockly/test/ReportShots.java
 src/stockly/test/Screenshot.java
 src/stockly/test/SelfTest.java
 src/stockly/test/UITest.java
