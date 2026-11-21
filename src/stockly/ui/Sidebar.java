@@ -25,7 +25,7 @@ import java.util.Map;
  * footer with the app version and a small profile chip. The active
  * destination gets a forest-tinted highlight.
  *
- * @author Tooba Akram & Abeeha Noor
+ * @author Tooba Akram &amp; Abeeha Noor
  * @version 1.0
  */
 public class Sidebar extends JPanel {

@@ -10,7 +10,7 @@ import java.awt.Font;
  * defined here so the visual identity stays consistent and can be
  * retuned in one place.
  *
- * @author Tooba Akram & Abeeha Noor
+ * @author Tooba Akram &amp; Abeeha Noor
  * @version 1.0
  */
 public final class Theme {

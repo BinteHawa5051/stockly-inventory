@@ -18,7 +18,7 @@ import java.awt.RenderingHints;
  * The prompt disappears as soon as the user types or the field gains
  * focus with content; it reappears when the field is cleared.
  *
- * @author Tooba Akram & Abeeha Noor
+ * @author Tooba Akram &amp; Abeeha Noor
  * @version 1.0
  */
 public class PromptField extends JTextField {

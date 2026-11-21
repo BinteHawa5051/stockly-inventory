@@ -26,7 +26,7 @@ import java.awt.Window;
  * Replaces default {@code JOptionPane} chrome with rounded cards,
  * vector icons, consistent typography and themed buttons.
  *
- * @author Tooba Akram & Abeeha Noor
+ * @author Tooba Akram &amp; Abeeha Noor
  * @version 1.0
  */
 public final class Dialogs {

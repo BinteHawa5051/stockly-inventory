@@ -31,7 +31,7 @@ import java.awt.RenderingHints;
  * palette preview, data management (export / import / clear with
  * confirmations handled by the frame) and an About block.
  *
- * @author Tooba Akram & Abeeha Noor
+ * @author Tooba Akram &amp; Abeeha Noor
  * @version 1.0
  */
 public class SettingsPanel extends JPanel {

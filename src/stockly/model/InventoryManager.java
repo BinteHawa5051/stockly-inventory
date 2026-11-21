@@ -24,7 +24,7 @@ import java.util.List;
  * methods and re-reads state through the getters, so every screen stays
  * consistent after any change.
  *
- * @author Tooba Akram & Abeeha Noor
+ * @author Tooba Akram &amp; Abeeha Noor
  * @version 1.0
  */
 public class InventoryManager {

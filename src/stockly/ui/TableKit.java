@@ -48,7 +48,7 @@ import java.awt.event.MouseEvent;
  *       selection row colours.</li>
  * </ul>
  *
- * @author Tooba Akram & Abeeha Noor
+ * @author Tooba Akram &amp; Abeeha Noor
  * @version 1.0
  */
 public final class TableKit {

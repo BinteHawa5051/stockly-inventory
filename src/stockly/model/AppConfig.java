@@ -16,7 +16,7 @@ import java.util.Properties;
  * saved whenever the user changes them in Settings, so every screen —
  * which all read these values live — stays consistent.
  *
- * @author Tooba Akram & Abeeha Noor
+ * @author Tooba Akram &amp; Abeeha Noor
  * @version 1.0
  */
 public final class AppConfig {
